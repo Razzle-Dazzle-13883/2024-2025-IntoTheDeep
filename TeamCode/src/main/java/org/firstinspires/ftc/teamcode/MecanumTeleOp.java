@@ -83,7 +83,7 @@ public class MecanumTeleOp extends LinearOpMode {
             if (gamepad2.dpad_up) {
                 up(5 * TICKS_PER_INCH, 0.1);
             }
-            if (gamepad2.dpad_left) {
+            if (gamepad2.dpad_down) {
                 down(5 * TICKS_PER_INCH,  0.1);
             }
 
