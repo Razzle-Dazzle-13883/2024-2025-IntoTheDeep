@@ -13,6 +13,8 @@ public class MecanumTeleOp extends LinearOpMode {
     DcMotor frontRightMotor;
     DcMotor backRightMotor;
     DcMotor armMotor;
+
+    Servo claw;
     int armPos; // Define arm position
     final int TICKS_PER_INCH = 45; // 11.87 in per rev; 537.7 ticks per rev; 537.7/11.87 ticks per inch
 
@@ -25,6 +27,7 @@ public class MecanumTeleOp extends LinearOpMode {
         frontRightMotor = hardwareMap.dcMotor.get("frontRightMotor");
         backRightMotor = hardwareMap.dcMotor.get("backRightMotor");
         armMotor = hardwareMap.dcMotor.get("armMotor");
+        claw = hardwareMap.servo.get("claw");
 
         frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -86,7 +89,12 @@ public class MecanumTeleOp extends LinearOpMode {
             if (gamepad2.dpad_down) {
                 down(5 * TICKS_PER_INCH,  0.1);
             }
-
+            if (gamepad2.right_bumper) {
+                claw.setPosition(1); // Opens claw
+            }
+            if (gamepad2.left_bumper) {
+                claw.setPosition(0); // Closes claw
+            }
         }
     }
 
