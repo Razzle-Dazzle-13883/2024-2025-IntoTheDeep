@@ -15,6 +15,7 @@ public class MecanumTeleOp extends LinearOpMode {
     DcMotor armMotor;
 
     Servo claw;
+    Servo wrist;
     int armPos; // Define arm position
     final int TICKS_PER_INCH = 45; // 11.87 in per rev; 537.7 ticks per rev; 537.7/11.87 ticks per inch
 
@@ -28,6 +29,7 @@ public class MecanumTeleOp extends LinearOpMode {
         backRightMotor = hardwareMap.dcMotor.get("backRightMotor");
         armMotor = hardwareMap.dcMotor.get("armMotor");
         claw = hardwareMap.servo.get("claw");
+        wrist = hardwareMap.servo.get("wrist");
 
         frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -82,18 +84,26 @@ public class MecanumTeleOp extends LinearOpMode {
                 frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             }
-
+            telemetry.addData("Arm Pos: ", armMotor.getCurrentPosition());
             if (gamepad2.dpad_up) {
                 up(5 * TICKS_PER_INCH, 0.1);
             }
             if (gamepad2.dpad_down) {
                 down(5 * TICKS_PER_INCH,  0.1);
             }
+            telemetry.addData("Claw Pos: ", claw.getPosition());
             if (gamepad2.right_bumper) {
                 claw.setPosition(1); // Opens claw
             }
             if (gamepad2.left_bumper) {
                 claw.setPosition(0); // Closes claw
+            }
+            telemetry.addData("Wrist Pos: ", wrist.getPosition());
+            if (gamepad2.a) {
+                wrist.setPosition(0.5); // Up wrist
+            }
+            if (gamepad2.b) {
+                wrist.setPosition(0); // Down wrist
             }
         }
     }
