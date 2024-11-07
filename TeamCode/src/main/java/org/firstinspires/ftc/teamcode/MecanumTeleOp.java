@@ -49,6 +49,7 @@ public class MecanumTeleOp extends LinearOpMode {
         // See the note about this earlier on this page.
         frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         waitForStart();
 
@@ -78,49 +79,55 @@ public class MecanumTeleOp extends LinearOpMode {
                 backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             } else if (gamepad1.right_stick_x == 0) {
                 frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             }
-            telemetry.addData("Arm Pos: ", armMotor.getCurrentPosition());
             if (gamepad2.dpad_up) {
-                up(5 * TICKS_PER_INCH, 0.1);
+                up(3 * TICKS_PER_INCH, 0.1);
+               // armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
             }
             if (gamepad2.dpad_down) {
-                down(5 * TICKS_PER_INCH,  0.1);
+                down(20,  0.1);
+               // armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             }
-            telemetry.addData("Claw Pos: ", claw.getPosition());
-            if (gamepad2.right_bumper) {
-                claw.setPosition(1); // Opens claw
+            if (gamepad2.x) {
+                claw.setPosition(0.8); // Opens claw
             }
-            if (gamepad2.left_bumper) {
-                claw.setPosition(0); // Closes claw
+            if (gamepad2.y) {
+                claw.setPosition(0.6); // Closes claw
             }
-            telemetry.addData("Wrist Pos: ", wrist.getPosition());
             if (gamepad2.a) {
-                wrist.setPosition(0.5); // Up wrist
+                wrist.setPosition(0.25); // Up wrist
             }
             if (gamepad2.b) {
                 wrist.setPosition(0); // Down wrist
             }
+            telemetry.addData("Arm Pos: ", armMotor.getCurrentPosition());
+            telemetry.addData("Claw Pos: ", claw.getPosition());
+            telemetry.addData("Wrist Pos: ", wrist.getPosition());
+            telemetry.update();
         }
     }
 
     public void up (int left, double speed) {
-        armPos -= left;
+        // armPos -= left;
 
-        armMotor.setTargetPosition(armPos);
+        armMotor.setTargetPosition(-left);
 
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         armMotor.setPower(speed);
     }
     public void down (int left, double speed) {
-        armPos += left;
+        // armPos += left;
 
-        armMotor.setTargetPosition(armPos);
+        armMotor.setTargetPosition(left);
 
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
