@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 @TeleOp(name="MyTeleOpMode")
@@ -43,6 +44,8 @@ public class MecanumTeleOp extends LinearOpMode {
         backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         // Reverse the right side motors. This may be wrong for your setup.
         // If your robot moves backwards when commanded to go forwards,
         // reverse the left side instead.
@@ -79,58 +82,59 @@ public class MecanumTeleOp extends LinearOpMode {
                 backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             } else if (gamepad1.right_stick_x == 0) {
                 frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             }
-            if (gamepad2.dpad_up) {
-                up(3 * TICKS_PER_INCH, 0.1);
-               // armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+            if (gamepad2.dpad_up) { // drop position; lower basket
+                armPos = -125;
+                armMotor.setTargetPosition(armPos);
+                armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                // ((DcMotorEx)armMotor).setVelocity(100);
+                armMotor.setPower(0.7);
             }
-            if (gamepad2.dpad_down) {
-                down(20,  0.1);
-               // armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+            if (gamepad2.left_bumper) { // pickup position
+                armPos = -22;
+                armMotor.setTargetPosition(armPos);
+                armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                armMotor.setPower(0.1);
             }
+
+            if (gamepad2.dpad_down) { // starting position
+                wrist.setPosition(0);
+
+                armPos = -3;
+                armMotor.setTargetPosition(armPos);
+                armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                armMotor.setPower(0.1);
+
+                sleep(500);
+                armMotor.setPower(0);
+            }
+
             if (gamepad2.x) {
-                claw.setPosition(0.8); // Opens claw
+                claw.setPosition(0.6); // Opens claw
             }
+
             if (gamepad2.y) {
-                claw.setPosition(0.6); // Closes claw
+                claw.setPosition(0.4); // Closes claw
             }
-            if (gamepad2.a) {
-                wrist.setPosition(0.25); // Up wrist
-            }
+
             if (gamepad2.b) {
-                wrist.setPosition(0); // Down wrist
+                wrist.setPosition(0.4); // Down wrist
+            }
+
+            if (gamepad2.a) {
+                wrist.setPosition(0); // Up wrist
             }
             telemetry.addData("Arm Pos: ", armMotor.getCurrentPosition());
             telemetry.addData("Claw Pos: ", claw.getPosition());
             telemetry.addData("Wrist Pos: ", wrist.getPosition());
             telemetry.update();
         }
-    }
-
-    public void up (int left, double speed) {
-        // armPos -= left;
-
-        armMotor.setTargetPosition(-left);
-
-        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        armMotor.setPower(speed);
-    }
-    public void down (int left, double speed) {
-        // armPos += left;
-
-        armMotor.setTargetPosition(left);
-
-        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        armMotor.setPower(speed);
     }
 }

@@ -4,15 +4,18 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name="AutoBlueRight")
-public class AutoBlueRight extends LinearOpMode {
+@Autonomous(name="AutoLeft")
+public class AutoLeft extends LinearOpMode {
 
     DcMotor frontLeftMotor;
     DcMotor backLeftMotor;
     DcMotor frontRightMotor;
     DcMotor backRightMotor;
     DcMotor armMotor;
+
+    Servo claw;
 
     int leftFrontPos = 0;
     int leftBackPos = 0;
@@ -30,6 +33,7 @@ public class AutoBlueRight extends LinearOpMode {
         frontRightMotor = hardwareMap.dcMotor.get("frontRightMotor");
         backRightMotor = hardwareMap.dcMotor.get("backRightMotor");
         armMotor = hardwareMap.dcMotor.get("armMotor");
+        claw = hardwareMap.servo.get("claw");
 
         frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -48,8 +52,10 @@ public class AutoBlueRight extends LinearOpMode {
 
         waitForStart();
 
-        drive(10 * TICKS_PER_INCH, 10 * TICKS_PER_INCH, 10 * TICKS_PER_INCH, 10 * TICKS_PER_INCH, 0.5);
-        drive(25 * TICKS_PER_INCH, -25 * TICKS_PER_INCH, -25 * TICKS_PER_INCH, 25 * TICKS_PER_INCH, 0.5);
+        claw.setPosition(0.4); // ensures claw is tight
+        // STARTING POSITION MOST HAVE LEFT SIDE AGAINST THE WALL
+        drive(20 * TICKS_PER_INCH, 20 * TICKS_PER_INCH, 20 * TICKS_PER_INCH, 20 * TICKS_PER_INCH, 0.5);
+        claw.setPosition(0.6);
     }
     public void drive(int lF, int lB, int rF, int rB, double speed) {
 
