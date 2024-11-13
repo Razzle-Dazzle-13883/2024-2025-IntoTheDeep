@@ -50,6 +50,10 @@ public class AutoRight extends LinearOpMode {
 
         drive(5 * TICKS_PER_INCH, 5 * TICKS_PER_INCH, 5 * TICKS_PER_INCH, 5 * TICKS_PER_INCH, 0.5); // Forward
         drive(25 * TICKS_PER_INCH, -25 * TICKS_PER_INCH, -25 * TICKS_PER_INCH, 25 * TICKS_PER_INCH, 0.5); // Strafe Right
+
+        while(!isStopRequested()){
+
+        }
     }
     public void drive(int lF, int lB, int rF, int rB, double speed) {
 
@@ -73,5 +77,9 @@ public class AutoRight extends LinearOpMode {
         backLeftMotor.setPower(speed);
         frontRightMotor.setPower(speed);
         backRightMotor.setPower(speed);
+
+        telemetry.addData("Running", true);
+        telemetry.update();
+
     }
 }

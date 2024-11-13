@@ -55,14 +55,19 @@ public class AutoLeft extends LinearOpMode {
         claw.setPosition(0.4); // ensures claw is tight
         // STARTING POSITION MOST HAVE LEFT SIDE AGAINST THE WALL
         drive(20 * TICKS_PER_INCH, 20 * TICKS_PER_INCH, 20 * TICKS_PER_INCH, 20 * TICKS_PER_INCH, 0.5);
+        sleep(1000);
         claw.setPosition(0.6);
+
+        while (!isStopRequested()) {
+
+        }
     }
     public void drive(int lF, int lB, int rF, int rB, double speed) {
 
-        leftFrontPos -= lF;
-        leftBackPos -= lB;
-        rightFrontPos -= rF;
-        rightBackPos -= rB;
+        leftFrontPos = -lF;
+        leftBackPos = -lB;
+        rightFrontPos = -rF;
+        rightBackPos = -rB;
 
         frontLeftMotor.setTargetPosition(leftFrontPos);
         backLeftMotor.setTargetPosition(leftBackPos);

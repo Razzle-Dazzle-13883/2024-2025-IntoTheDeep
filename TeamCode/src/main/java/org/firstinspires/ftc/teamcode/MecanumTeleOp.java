@@ -89,6 +89,20 @@ public class MecanumTeleOp extends LinearOpMode {
                 backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             }
 
+            if (gamepad1.dpad_up) { // Sets motors to normal speed
+                frontLeftMotor.setPower(frontLeftPower);
+                backLeftMotor.setPower(backLeftPower);
+                frontRightMotor.setPower(frontRightPower);
+                backRightMotor.setPower(backRightPower);
+            }
+
+            if (gamepad1.dpad_down) { // Sets motors to a slower speed
+                frontLeftMotor.setPower(0.35);
+                backLeftMotor.setPower(0.35);
+                frontRightMotor.setPower(0.35);
+                backRightMotor.setPower(0.35);
+            }
+
             if (gamepad2.dpad_up) { // drop position; lower basket
                 armPos = -125;
                 armMotor.setTargetPosition(armPos);
