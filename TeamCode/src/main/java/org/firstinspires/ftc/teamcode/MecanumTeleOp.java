@@ -19,6 +19,7 @@ public class MecanumTeleOp extends LinearOpMode {
     Servo wrist;
     int armPos; // Define arm position
     final int TICKS_PER_INCH = 45; // 11.87 in per rev; 537.7 ticks per rev; 537.7/11.87 ticks per inch
+    double speedFactor = 1.0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -67,10 +68,10 @@ public class MecanumTeleOp extends LinearOpMode {
             // This ensures all the powers maintain the same ratio,
             // but only if at least one is out of the range [-1, 1]
             double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-            double frontLeftPower = (y + x + rx) / denominator;
-            double backLeftPower = (y - x + rx) / denominator;
-            double frontRightPower = (y - x - rx) / denominator;
-            double backRightPower = (y + x - rx) / denominator;
+            double frontLeftPower = (y + x + rx) / denominator * speedFactor;
+            double backLeftPower = (y - x + rx) / denominator * speedFactor;
+            double frontRightPower = (y - x - rx) / denominator * speedFactor;
+            double backRightPower = (y + x - rx) / denominator * speedFactor;
 
             frontLeftMotor.setPower(frontLeftPower);
             backLeftMotor.setPower(backLeftPower);
@@ -89,18 +90,10 @@ public class MecanumTeleOp extends LinearOpMode {
                 backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             }
 
-            if (gamepad1.dpad_up) { // Sets motors to normal speed
-                frontLeftMotor.setPower(frontLeftPower);
-                backLeftMotor.setPower(backLeftPower);
-                frontRightMotor.setPower(frontRightPower);
-                backRightMotor.setPower(backRightPower);
-            }
-
-            if (gamepad1.dpad_down) { // Sets motors to a slower speed
-                frontLeftMotor.setPower(0.35);
-                backLeftMotor.setPower(0.35);
-                frontRightMotor.setPower(0.35);
-                backRightMotor.setPower(0.35);
+            if (gamepad1.dpad_up) {
+                speedFactor = 1.0;
+            } else if (gamepad1.dpad_down) {
+                speedFactor = 0.5;
             }
 
             if (gamepad2.dpad_up) { // drop position; lower basket
