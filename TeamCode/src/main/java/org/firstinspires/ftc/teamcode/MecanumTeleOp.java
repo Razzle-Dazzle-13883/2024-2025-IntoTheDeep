@@ -13,10 +13,10 @@ public class MecanumTeleOp extends LinearOpMode {
     DcMotor backLeftMotor;
     DcMotor frontRightMotor;
     DcMotor backRightMotor;
-    DcMotor armMotor;
+    // DcMotor armMotor;
 
-    Servo claw;
-    Servo wrist;
+    // Servo claw;
+    // Servo wrist;
     int armPos; // Define arm position
     final int TICKS_PER_INCH = 45; // 11.87 in per rev; 537.7 ticks per rev; 537.7/11.87 ticks per inch
     double speedFactor = 1.0;
@@ -29,23 +29,23 @@ public class MecanumTeleOp extends LinearOpMode {
         backLeftMotor = hardwareMap.dcMotor.get("backLeftMotor");
         frontRightMotor = hardwareMap.dcMotor.get("frontRightMotor");
         backRightMotor = hardwareMap.dcMotor.get("backRightMotor");
-        armMotor = hardwareMap.dcMotor.get("armMotor");
-        claw = hardwareMap.servo.get("claw");
-        wrist = hardwareMap.servo.get("wrist");
+        // armMotor = hardwareMap.dcMotor.get("armMotor");
+        // claw = hardwareMap.servo.get("claw");
+        // wrist = hardwareMap.servo.get("wrist");
 
         frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        // armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        // armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        // armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Reverse the right side motors. This may be wrong for your setup.
         // If your robot moves backwards when commanded to go forwards,
@@ -53,7 +53,7 @@ public class MecanumTeleOp extends LinearOpMode {
         // See the note about this earlier on this page.
         frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        // armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         waitForStart();
 
@@ -96,6 +96,7 @@ public class MecanumTeleOp extends LinearOpMode {
                 speedFactor = 0.5;
             }
 
+            /*
             if (gamepad2.dpad_up) { // drop position; lower basket
                 armPos = -125;
                 armMotor.setTargetPosition(armPos);
@@ -103,15 +104,17 @@ public class MecanumTeleOp extends LinearOpMode {
                 // ((DcMotorEx)armMotor).setVelocity(100);
                 armMotor.setPower(0.7);
             }
+            */
 
-            if (gamepad2.left_bumper) { // pickup position
+            /* if (gamepad2.left_bumper) { // pickup position
                 armPos = -22;
                 armMotor.setTargetPosition(armPos);
                 armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 armMotor.setPower(0.1);
             }
 
-            if (gamepad2.dpad_down) { // starting position
+
+            /* if (gamepad2.dpad_down) { // starting position
                 wrist.setPosition(0);
 
                 armPos = -3;
@@ -123,6 +126,8 @@ public class MecanumTeleOp extends LinearOpMode {
                 armMotor.setPower(0);
             }
 
+             */
+/*
             if (gamepad2.x) {
                 claw.setPosition(0.6); // Opens claw
             }
@@ -138,9 +143,10 @@ public class MecanumTeleOp extends LinearOpMode {
             if (gamepad2.a) {
                 wrist.setPosition(0); // Up wrist
             }
-            telemetry.addData("Arm Pos: ", armMotor.getCurrentPosition());
-            telemetry.addData("Claw Pos: ", claw.getPosition());
-            telemetry.addData("Wrist Pos: ", wrist.getPosition());
+            */
+            // telemetry.addData("Arm Pos: ", armMotor.getCurrentPosition());
+            // telemetry.addData("Claw Pos: ", claw.getPosition());
+            // telemetry.addData("Wrist Pos: ", wrist.getPosition());
             telemetry.update();
         }
     }

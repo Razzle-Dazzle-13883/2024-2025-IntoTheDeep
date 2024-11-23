@@ -13,9 +13,9 @@ public class AutoLeft extends LinearOpMode {
     DcMotor backLeftMotor;
     DcMotor frontRightMotor;
     DcMotor backRightMotor;
-    DcMotor armMotor;
+    // DcMotor armMotor;
 
-    Servo claw;
+    // Servo claw;
 
     int leftFrontPos = 0;
     int leftBackPos = 0;
@@ -32,31 +32,31 @@ public class AutoLeft extends LinearOpMode {
         backLeftMotor = hardwareMap.dcMotor.get("backLeftMotor");
         frontRightMotor = hardwareMap.dcMotor.get("frontRightMotor");
         backRightMotor = hardwareMap.dcMotor.get("backRightMotor");
-        armMotor = hardwareMap.dcMotor.get("armMotor");
-        claw = hardwareMap.servo.get("claw");
+        // armMotor = hardwareMap.dcMotor.get("armMotor");
+        // claw = hardwareMap.servo.get("claw");
 
         frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        // armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        // armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         waitForStart();
 
-        claw.setPosition(0.4); // ensures claw is tight
+        // claw.setPosition(0.4); // ensures claw is tight
         // STARTING POSITION MOST HAVE LEFT SIDE AGAINST THE WALL
         drive(20 * TICKS_PER_INCH, 20 * TICKS_PER_INCH, 20 * TICKS_PER_INCH, 20 * TICKS_PER_INCH, 0.5);
         sleep(1000);
-        claw.setPosition(0.6);
+        // claw.setPosition(0.6);
 
         while (!isStopRequested()) {
 
