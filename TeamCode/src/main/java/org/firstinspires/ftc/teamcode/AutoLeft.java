@@ -54,8 +54,18 @@ public class AutoLeft extends LinearOpMode {
 
         // claw.setPosition(0.4); // ensures claw is tight
         // STARTING POSITION MOST HAVE LEFT SIDE AGAINST THE WALL
-        drive(20 * TICKS_PER_INCH, 20 * TICKS_PER_INCH, 20 * TICKS_PER_INCH, 20 * TICKS_PER_INCH, 0.5);
-        sleep(1000);
+        drive(25 * TICKS_PER_INCH, 25 * TICKS_PER_INCH, 25 * TICKS_PER_INCH, 25 * TICKS_PER_INCH, 0.5); // Forward
+        sleep(2000);
+        drive(10 * TICKS_PER_INCH, -10 * TICKS_PER_INCH, -10 * TICKS_PER_INCH, 10 * TICKS_PER_INCH, 0.5); // Strafe Right
+        sleep(2000);
+        drive(-10 * TICKS_PER_INCH, -10 * TICKS_PER_INCH, -10 * TICKS_PER_INCH, -10 * TICKS_PER_INCH, 0.5); // Reverse
+        sleep(2000);
+        drive(-55 * TICKS_PER_INCH, 55 * TICKS_PER_INCH, 55 * TICKS_PER_INCH, -55 * TICKS_PER_INCH, 0.5); //Strafe Left
+        sleep(2000);
+        drive(10 * TICKS_PER_INCH, 10 * TICKS_PER_INCH, 10 * TICKS_PER_INCH, 10 * TICKS_PER_INCH, 0.5);
+
+
+        // sleep(1000);
         // claw.setPosition(0.6);
 
         while (!isStopRequested()) {
@@ -64,10 +74,10 @@ public class AutoLeft extends LinearOpMode {
     }
     public void drive(int lF, int lB, int rF, int rB, double speed) {
 
-        leftFrontPos = -lF;
-        leftBackPos = -lB;
-        rightFrontPos = -rF;
-        rightBackPos = -rB;
+        leftFrontPos -= lF;
+        leftBackPos -= lB;
+        rightFrontPos -= rF;
+        rightBackPos -= rB;
 
         frontLeftMotor.setTargetPosition(leftFrontPos);
         backLeftMotor.setTargetPosition(leftBackPos);

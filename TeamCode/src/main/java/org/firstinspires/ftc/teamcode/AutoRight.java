@@ -56,12 +56,12 @@ public class AutoRight extends LinearOpMode {
         sleep(2000);
         drive(40 * TICKS_PER_INCH, 40 * TICKS_PER_INCH, -40 * TICKS_PER_INCH, -40 * TICKS_PER_INCH, 0.5); // Strafe Right
         sleep(2000);
-        ..
-        drive(-10 * TICKS_PER_INCH, 10 * TICKS_PER_INCH, 10 * TICKS_PER_INCH, -10 * TICKS_PER_INCH, 0.5);
+        drive(-10 * TICKS_PER_INCH, 10 * TICKS_PER_INCH, 10 * TICKS_PER_INCH, -10 * TICKS_PER_INCH, 0.5); // Strafe Left
         sleep(2000);
-        drive(50 * TICKS_PER_INCH, 50 * TICKS_PER_INCH, 50 * TICKS_PER_INCH, 50 * TICKS_PER_INCH, 0.5);
+        drive(50 * TICKS_PER_INCH, 50 * TICKS_PER_INCH, 50 * TICKS_PER_INCH, 50 * TICKS_PER_INCH, 0.5); // Forward
         sleep(2000);
-        drive(-10 * TICKS_PER_INCH, -10 * TICKS_PER_INCH, -10 * TICKS_PER_INCH, -10 * TICKS_PER_INCH, 0.5);
+        drive(-20 * TICKS_PER_INCH, -20 * TICKS_PER_INCH, -20 * TICKS_PER_INCH, -20 * TICKS_PER_INCH, 0.5); // Reverse
+
         while(!isStopRequested()){
 
         }
