@@ -13,11 +13,16 @@ public class MecanumTeleOp extends LinearOpMode {
     DcMotor backLeftMotor;
     DcMotor frontRightMotor;
     DcMotor backRightMotor;
-    // DcMotor armMotor;
+    DcMotor armMotorR;
+    DcMotor armMotorL;
+    DcMotor rightLS;
+    DcMotor leftLS;
 
     // Servo claw;
     // Servo wrist;
-    int armPos; // Define arm position
+    int armPos;// Define arm position
+    int leftLS;
+    int rightLS;
     final int TICKS_PER_INCH = 45; // 11.87 in per rev; 537.7 ticks per rev; 537.7/11.87 ticks per inch
     double speedFactor = 1.0;
 
@@ -29,7 +34,10 @@ public class MecanumTeleOp extends LinearOpMode {
         backLeftMotor = hardwareMap.dcMotor.get("backLeftMotor");
         frontRightMotor = hardwareMap.dcMotor.get("frontRightMotor");
         backRightMotor = hardwareMap.dcMotor.get("backRightMotor");
-        // armMotor = hardwareMap.dcMotor.get("armMotor");
+        armMotorR = hardwareMap.dcMotor.get("armMotorR");
+        armMotorL = hardwareMap.dcMotor.get("armMotorL");
+        rightLS = hardwareMap.dcMotor.get("rightLS");
+        leftLS = hardwareMap.dcMotor.get("leftLS");
         // claw = hardwareMap.servo.get("claw");
         // wrist = hardwareMap.servo.get("wrist");
 
@@ -37,15 +45,24 @@ public class MecanumTeleOp extends LinearOpMode {
         backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        // armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        armMotorR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        armMotorL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightLS.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftLS.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        // armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        armMotorR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        armMotorL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightLS.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftLS.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        // armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        armMotorR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        armMotorL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightLS.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftLS.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Reverse the right side motors. This may be wrong for your setup.
         // If your robot moves backwards when commanded to go forwards,
@@ -53,7 +70,8 @@ public class MecanumTeleOp extends LinearOpMode {
         // See the note about this earlier on this page.
         frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        // armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        armMotorR.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightLS.setDirection(DcMotorSimple.Direction.REVERSE);
 
         waitForStart();
 
@@ -89,6 +107,7 @@ public class MecanumTeleOp extends LinearOpMode {
                 frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             }
+
 
             if (gamepad1.dpad_up) {
                 speedFactor = 1.0;

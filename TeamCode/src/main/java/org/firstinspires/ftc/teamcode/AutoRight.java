@@ -48,20 +48,26 @@ public class AutoRight extends LinearOpMode {
 
         waitForStart();
 
-        drive(20 * TICKS_PER_INCH, 20 * TICKS_PER_INCH, 20 * TICKS_PER_INCH, 20 * TICKS_PER_INCH, 0.5); // Forward
+        drive(20 * TICKS_PER_INCH, 20 * TICKS_PER_INCH, 20 * TICKS_PER_INCH, 20 * TICKS_PER_INCH, 0.6); // Forward
         sleep(2000);
-        drive(30 * TICKS_PER_INCH, -30 * TICKS_PER_INCH, -30 * TICKS_PER_INCH, 30 * TICKS_PER_INCH, 0.5); // Strafe Right
+        drive(30 * TICKS_PER_INCH, -30 * TICKS_PER_INCH, -30 * TICKS_PER_INCH, 30 * TICKS_PER_INCH, 0.6); // Strafe Right
         sleep(2000);
-        drive(35 * TICKS_PER_INCH, 35 * TICKS_PER_INCH, 35 * TICKS_PER_INCH, 35 * TICKS_PER_INCH, 0.5); // Forward
+        drive(35 * TICKS_PER_INCH, 35 * TICKS_PER_INCH, 35 * TICKS_PER_INCH, 35 * TICKS_PER_INCH, 0.6); // Forward
         sleep(2000);
-        drive(40 * TICKS_PER_INCH, 40 * TICKS_PER_INCH, -40 * TICKS_PER_INCH, -40 * TICKS_PER_INCH, 0.5); // Strafe Right
+        drive(40 * TICKS_PER_INCH, 40 * TICKS_PER_INCH, -40 * TICKS_PER_INCH, -40 * TICKS_PER_INCH, 0.6); // Strafe Right
         sleep(2000);
-        drive(-10 * TICKS_PER_INCH, 10 * TICKS_PER_INCH, 10 * TICKS_PER_INCH, -10 * TICKS_PER_INCH, 0.5); // Strafe Left
+        drive(-15 * TICKS_PER_INCH, 15 * TICKS_PER_INCH, 15 * TICKS_PER_INCH, -15 * TICKS_PER_INCH, 0.6); // Strafe Left
         sleep(2000);
-        drive(50 * TICKS_PER_INCH, 50 * TICKS_PER_INCH, 50 * TICKS_PER_INCH, 50 * TICKS_PER_INCH, 0.5); // Forward
+        drive(65 * TICKS_PER_INCH, 65 * TICKS_PER_INCH, 65 * TICKS_PER_INCH, 65 * TICKS_PER_INCH, 0.6); // Forward
         sleep(2000);
-        drive(-20 * TICKS_PER_INCH, -20 * TICKS_PER_INCH, -20 * TICKS_PER_INCH, -20 * TICKS_PER_INCH, 0.5); // Reverse
-
+        drive(-77 * TICKS_PER_INCH, -77 * TICKS_PER_INCH, -77 * TICKS_PER_INCH, -77 * TICKS_PER_INCH, 0.6); // Reverse
+        sleep(2000);
+        drive(-10 * TICKS_PER_INCH, 10 * TICKS_PER_INCH, 10 * TICKS_PER_INCH, -10 * TICKS_PER_INCH, 0.6); //Strafe Left
+        sleep(2000);
+        drive(50 * TICKS_PER_INCH, 50 * TICKS_PER_INCH, 50 * TICKS_PER_INCH, 50 * TICKS_PER_INCH, 0.6); // Forward
+        sleep(2000);
+        drive(-40 * TICKS_PER_INCH, -40 * TICKS_PER_INCH, -40 * TICKS_PER_INCH, -40 * TICKS_PER_INCH, 0.6); // Reverse
+        sleep(2000);
         while(!isStopRequested()){
 
         }
