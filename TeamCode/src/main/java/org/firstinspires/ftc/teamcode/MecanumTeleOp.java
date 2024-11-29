@@ -13,18 +13,43 @@ public class MecanumTeleOp extends LinearOpMode {
     DcMotor backLeftMotor;
     DcMotor frontRightMotor;
     DcMotor backRightMotor;
-    DcMotor armMotorR;
-    DcMotor armMotorL;
+    DcMotor rightArm;
+    DcMotor leftArm;
     DcMotor rightLS;
     DcMotor leftLS;
 
-    // Servo claw;
-    // Servo wrist;
-    int armPos;// Define arm position
-    int leftLS;
-    int rightLS;
+    Servo claw;
+    Servo wrist;
+    Servo rotation;
+
+    int leftPos; // Define left LS position
+    int rightPos; // Define right LS position
     final int TICKS_PER_INCH = 45; // 11.87 in per rev; 537.7 ticks per rev; 537.7/11.87 ticks per inch
     double speedFactor = 1.0;
+
+    final double ARM_TICKS_PER_DEGREE = 28 // number of encoder ticks per rotation of the bare motor
+                    * 19.2 // This is the exact gear ratio of the 19.2:1 Yellow Jacket gearbox
+                    * 100.0 / 20.0 // This is the external gear reduction, a 20T pinion gear that drives a 100T hub-mount gear
+                    * 1/360.0; // we want ticks per degree, not per rotation
+    double armPos; // Define arm position
+    final double ARM_REST = 0;
+    final double ARM_CLEAR_BARRIER = 15 * ARM_TICKS_PER_DEGREE;
+    final double ARM_WALL_PICKUP = 55 * ARM_TICKS_PER_DEGREE;
+    final double ARM_HANG = 65 * ARM_TICKS_PER_DEGREE;
+    final double ARM_SCORE_HIGH_RUNG = 85 * ARM_TICKS_PER_DEGREE;
+    final double ARM_SCORE_HIGH_BASKET = 95 * ARM_TICKS_PER_DEGREE;
+
+    double clawPos; // Define claw position
+    final double CLAW_OPEN = 0.5;
+    final double CLAW_CLOSE = 0;
+
+    double wristPos; // Define wrist position
+    final double WRIST_OPEN = 1.0;
+    final double WRIST_CLOSE = 0;
+
+    double rotatePos; // Define rotation servo position
+    final double ROTATION_OPEN = 1.0;
+    final double ROTATION_CLOSE = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -34,19 +59,20 @@ public class MecanumTeleOp extends LinearOpMode {
         backLeftMotor = hardwareMap.dcMotor.get("backLeftMotor");
         frontRightMotor = hardwareMap.dcMotor.get("frontRightMotor");
         backRightMotor = hardwareMap.dcMotor.get("backRightMotor");
-        armMotorR = hardwareMap.dcMotor.get("armMotorR");
-        armMotorL = hardwareMap.dcMotor.get("armMotorL");
+        rightArm = hardwareMap.dcMotor.get("rightArm");
+        leftArm = hardwareMap.dcMotor.get("leftArm");
         rightLS = hardwareMap.dcMotor.get("rightLS");
         leftLS = hardwareMap.dcMotor.get("leftLS");
-        // claw = hardwareMap.servo.get("claw");
-        // wrist = hardwareMap.servo.get("wrist");
+        claw = hardwareMap.servo.get("claw");
+        wrist = hardwareMap.servo.get("wrist");
+        rotation = hardwareMap.servo.get("rotation");
 
         frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        armMotorR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        armMotorL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightLS.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftLS.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -54,23 +80,22 @@ public class MecanumTeleOp extends LinearOpMode {
         backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        armMotorR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        armMotorL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightLS.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftLS.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        armMotorR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        armMotorL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightLS.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftLS.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Reverse the right side motors. This may be wrong for your setup.
         // If your robot moves backwards when commanded to go forwards,
         // reverse the left side instead.
-        // See the note about this earlier on this page.
         frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        armMotorR.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightArm.setDirection(DcMotorSimple.Direction.REVERSE);
         rightLS.setDirection(DcMotorSimple.Direction.REVERSE);
 
         waitForStart();
@@ -108,65 +133,95 @@ public class MecanumTeleOp extends LinearOpMode {
                 backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             }
 
-
             if (gamepad1.dpad_up) {
                 speedFactor = 1.0;
             } else if (gamepad1.dpad_down) {
                 speedFactor = 0.5;
             }
 
-            /*
-            if (gamepad2.dpad_up) { // drop position; lower basket
-                armPos = -125;
-                armMotor.setTargetPosition(armPos);
-                armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                // ((DcMotorEx)armMotor).setVelocity(100);
-                armMotor.setPower(0.7);
+            if (gamepad2.dpad_up) { // linear slide up
+                up(5 * TICKS_PER_INCH, 5 * TICKS_PER_INCH, 0.5);
             }
-            */
-
-            /* if (gamepad2.left_bumper) { // pickup position
-                armPos = -22;
-                armMotor.setTargetPosition(armPos);
-                armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                armMotor.setPower(0.1);
+            if (gamepad2.dpad_down) { // linear slide down
+                down(5 * TICKS_PER_INCH, 5 * TICKS_PER_INCH, 0.5);
             }
 
-
-            /* if (gamepad2.dpad_down) { // starting position
-                wrist.setPosition(0);
-
-                armPos = -3;
-                armMotor.setTargetPosition(armPos);
-                armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                armMotor.setPower(0.1);
-
-                sleep(500);
-                armMotor.setPower(0);
+            if (gamepad2.left_stick_button) {
+                armPos = ARM_SCORE_HIGH_RUNG;
+            }
+            if (gamepad2.dpad_left) {
+                clawPos = CLAW_CLOSE;
+                wristPos = WRIST_CLOSE;
+                rotatePos = WRIST_CLOSE;
+                armPos = ARM_REST;
+            }
+            if (gamepad2.left_bumper) {
+                armPos = ARM_CLEAR_BARRIER;
+            }
+            if (gamepad2.right_bumper) {
+                armPos = ARM_WALL_PICKUP;
+            }
+            if (gamepad2.right_stick_button) {
+                armPos = ARM_SCORE_HIGH_BASKET;
+            }
+            if (gamepad2.dpad_right) {
+                armPos = ARM_HANG;
             }
 
-             */
-/*
             if (gamepad2.x) {
-                claw.setPosition(0.6); // Opens claw
+                clawPos = CLAW_OPEN;
             }
-
             if (gamepad2.y) {
-                claw.setPosition(0.4); // Closes claw
+                clawPos = CLAW_CLOSE;
             }
 
             if (gamepad2.b) {
-                wrist.setPosition(0.4); // Down wrist
+                wristPos = WRIST_CLOSE;
+            }
+            if (gamepad2.a) {
+                wristPos = WRIST_OPEN;
             }
 
-            if (gamepad2.a) {
-                wrist.setPosition(0); // Up wrist
+            if (gamepad2.start) {
+                rotatePos = ROTATION_OPEN;
             }
-            */
-            // telemetry.addData("Arm Pos: ", armMotor.getCurrentPosition());
-            // telemetry.addData("Claw Pos: ", claw.getPosition());
-            // telemetry.addData("Wrist Pos: ", wrist.getPosition());
-            telemetry.update();
+            if (gamepad2.back) {
+                rotatePos = ROTATION_CLOSE;
+            }
+
+            claw.setPosition(clawPos);
+            wrist.setPosition(wristPos);
+            rotation.setPosition(rotatePos);
+            leftArm.setTargetPosition((int)armPos);
+            rightArm.setTargetPosition((int) armPos);
+            leftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rightArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
+    }
+    public void up (int left, int right, double speed) {
+        leftPos -= left;
+        rightPos -= right;
+
+        leftLS.setTargetPosition(leftPos);
+        rightLS.setTargetPosition(rightPos);
+
+        leftLS.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightLS.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        leftLS.setPower(speed);
+        rightLS.setPower(speed);
+    }
+    public void down ( int left, int right, double speed){
+        leftPos += left;
+        rightPos += right;
+
+        leftLS.setTargetPosition(leftPos);
+        rightLS.setTargetPosition(rightPos);
+
+        leftLS.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightLS.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        leftLS.setPower(speed);
+        rightLS.setPower(speed);
     }
 }
