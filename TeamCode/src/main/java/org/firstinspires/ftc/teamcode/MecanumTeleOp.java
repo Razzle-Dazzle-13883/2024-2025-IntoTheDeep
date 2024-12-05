@@ -15,15 +15,15 @@ public class MecanumTeleOp extends LinearOpMode {
     DcMotor frontRightMotor;
     DcMotor backRightMotor;
     DcMotor rightArm;
-    DcMotor leftArm;
+    // DcMotor leftArm;
     DcMotor rightLS;
-    DcMotor leftLS;
+    // DcMotor leftLS;
 
     Servo claw;
     Servo wrist;
     CRServo rotation;
 
-    int leftPos; // Define left LS position
+    // int leftPos; // Define left LS position
     int rightPos; // Define right LS position
     final int TICKS_PER_INCH = 45; // 11.87 in per rev; 537.7 ticks per rev; 537.7/11.87 ticks per inch
     double speedFactor = 0.7;
@@ -66,9 +66,9 @@ public class MecanumTeleOp extends LinearOpMode {
         frontRightMotor = hardwareMap.dcMotor.get("frontRightMotor");
         backRightMotor = hardwareMap.dcMotor.get("backRightMotor");
         rightArm = hardwareMap.dcMotor.get("rightArm");
-        leftArm = hardwareMap.dcMotor.get("leftArm");
+        // leftArm = hardwareMap.dcMotor.get("leftArm");
         rightLS = hardwareMap.dcMotor.get("rightLS");
-        leftLS = hardwareMap.dcMotor.get("leftLS");
+        // leftLS = hardwareMap.dcMotor.get("leftLS");
         claw = hardwareMap.servo.get("claw");
         wrist = hardwareMap.servo.get("wrist");
         rotation = hardwareMap.crservo.get("rotation");
@@ -78,23 +78,23 @@ public class MecanumTeleOp extends LinearOpMode {
         frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        // leftArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightLS.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftLS.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        // leftLS.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        // leftArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightLS.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftLS.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        // leftLS.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         rightArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        // leftArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightLS.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftLS.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        // leftLS.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Reverse the right side motors. This may be wrong for your setup.
         // If your robot moves backwards when commanded to go forwards,
@@ -187,9 +187,9 @@ public class MecanumTeleOp extends LinearOpMode {
 
             claw.setPosition(clawPos);
             wrist.setPosition(wristPos);
-            leftArm.setTargetPosition((int)armPos);
+            // leftArm.setTargetPosition((int)armPos);
             rightArm.setTargetPosition((int) armPos);
-            leftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            // leftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             rightArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             if (Math.abs(gamepad2.right_stick_x) >= rotationBuffer) {
@@ -198,29 +198,29 @@ public class MecanumTeleOp extends LinearOpMode {
         }
     }
     public void up (int left, int right, double speed) {
-        leftPos -= left;
+        // leftPos -= left;
         rightPos -= right;
 
-        leftLS.setTargetPosition(leftPos);
+        // leftLS.setTargetPosition(leftPos);
         rightLS.setTargetPosition(rightPos);
 
-        leftLS.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        // leftLS.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightLS.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        leftLS.setPower(speed);
+        // leftLS.setPower(speed);
         rightLS.setPower(speed);
     }
     public void down ( int left, int right, double speed){
-        leftPos += left;
+        // leftPos += left;
         rightPos += right;
 
-        leftLS.setTargetPosition(leftPos);
+        // leftLS.setTargetPosition(leftPos);
         rightLS.setTargetPosition(rightPos);
 
-        leftLS.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        // leftLS.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightLS.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        leftLS.setPower(speed);
+        // leftLS.setPower(speed);
         rightLS.setPower(speed);
     }
 }
