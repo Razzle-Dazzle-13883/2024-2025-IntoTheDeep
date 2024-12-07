@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -21,41 +20,41 @@ public class MecanumTeleOp extends LinearOpMode {
 
     Servo claw;
     Servo wrist;
-    CRServo rotation;
+    Servo rotation;
 
     // int leftPos; // Define left LS position
     int rightPos; // Define right LS position
     final int TICKS_PER_INCH = 45; // 11.87 in per rev; 537.7 ticks per rev; 537.7/11.87 ticks per inch
+    final double LS_TICKS_PER_INCH = 87.2079837; // 435rpm motor encoder/spool circumference 4.409 in per rev; 384.5/4.409 ticks per inch
     double speedFactor = 0.7;
 
     final double ARM_TICKS_PER_DEGREE = 28 // number of encoder ticks per rotation of the bare motor
-                    * 19.2 // This is the exact gear ratio of the 19.2:1 Yellow Jacket gearbox
+                    * 13.7 // This is the exact gear ratio of the 13.7:1 Yellow Jacket gearbox
                     * 100.0 / 20.0 // This is the external gear reduction, a 20T pinion gear that drives a 100T hub-mount gear
                     * 1/360.0; // we want ticks per degree, not per rotation
     double armPos; // Define arm position
+    double armPower = 0.2;
     final double ARM_REST = 0;
     final double ARM_FLOOR_PICKUP = 10 * ARM_TICKS_PER_DEGREE;
     final double ARM_CLEAR_BARRIER = 15 * ARM_TICKS_PER_DEGREE;
     final double ARM_WALL_PICKUP = 55 * ARM_TICKS_PER_DEGREE;
-    final double ARM_HANG = 65 * ARM_TICKS_PER_DEGREE;
-    final double ARM_SCORE_HIGH_RUNG = 85 * ARM_TICKS_PER_DEGREE;
+    final double ARM_HANG = 75 * ARM_TICKS_PER_DEGREE;
+    final double ARM_HANG_SPECIMEN = 80 * ARM_TICKS_PER_DEGREE;
+    final double ARM_SCORE_LOW_RUNG = 85 * ARM_TICKS_PER_DEGREE;
     final double ARM_SCORE_HIGH_BASKET = 95 * ARM_TICKS_PER_DEGREE;
+    double armManual = 0.0;
 
     double clawPos; // Define claw position
     final double CLAW_OPEN = 0.5;
     final double CLAW_CLOSE = 0;
 
     double wristPos; // Define wrist position
-    final double WRIST_OPEN = 1.0;
+    final double WRIST_OPEN = 0.2;
     final double WRIST_CLOSE = 0;
 
     double rotatePos; // Define rotation servo position
-    final double ROTATION_OPEN = 1.0;
+    final double ROTATION_OPEN = 0.25;
     final double ROTATION_CLOSE = 0;
-
-    private double rotationZeroPower = 0.0;
-    private double rotationSensitivity = 0.5;
-    private double rotationBuffer = .01;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -71,7 +70,7 @@ public class MecanumTeleOp extends LinearOpMode {
         // leftLS = hardwareMap.dcMotor.get("leftLS");
         claw = hardwareMap.servo.get("claw");
         wrist = hardwareMap.servo.get("wrist");
-        rotation = hardwareMap.crservo.get("rotation");
+        rotation = hardwareMap.servo.get("rotation");
 
         frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -101,10 +100,8 @@ public class MecanumTeleOp extends LinearOpMode {
         // reverse the left side instead.
         frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightArm.setDirection(DcMotorSimple.Direction.REVERSE);
+        // rightArm.setDirection(DcMotorSimple.Direction.REVERSE);
         rightLS.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        rotation.setPower(rotationZeroPower);
 
         waitForStart();
 
@@ -142,17 +139,25 @@ public class MecanumTeleOp extends LinearOpMode {
             }
 
             if (gamepad2.dpad_up) { // linear slide up
-                up(5 * TICKS_PER_INCH, 5 * TICKS_PER_INCH, 0.5);
+                if (Math.abs(rightPos) >= 10 * LS_TICKS_PER_INCH) {
+                    // safety
+                } else {
+                    up((int) (0.1 * LS_TICKS_PER_INCH), (int) (0.1 * LS_TICKS_PER_INCH), 0.2);
+                }
             }
             if (gamepad2.dpad_down) { // linear slide down
-                down(5 * TICKS_PER_INCH, 5 * TICKS_PER_INCH, 0.5);
+                down((int)(0.1 * LS_TICKS_PER_INCH),(int)(0.1 * LS_TICKS_PER_INCH), 0.2);
             }
 
             // setting arm positions
             if (gamepad1.a) {
+                wristPos = WRIST_CLOSE;
+                rotatePos = ROTATION_CLOSE;
                 armPos = ARM_CLEAR_BARRIER;
             }
             if (gamepad1.b) {
+                wristPos = WRIST_CLOSE;
+                rotatePos = ROTATION_CLOSE;
                 armPos = ARM_FLOOR_PICKUP;
             }
             if (gamepad1.x) {
@@ -162,13 +167,18 @@ public class MecanumTeleOp extends LinearOpMode {
                 armPos = ARM_SCORE_HIGH_BASKET;
             }
             if (gamepad1.right_bumper) {
-                armPos = ARM_SCORE_HIGH_RUNG;
+                armPos = ARM_SCORE_LOW_RUNG;
             }
             if (gamepad1.dpad_up) {
                 armPos = ARM_HANG;
             }
             if (gamepad1.dpad_down) {
-                armPos= ARM_REST;
+                wristPos = WRIST_CLOSE;
+                rotatePos = ROTATION_CLOSE;
+                armPos = ARM_REST;
+            }
+            if (gamepad1.y) {
+                armPos = ARM_HANG_SPECIMEN;
             }
 
             if (gamepad2.x) {
@@ -185,16 +195,38 @@ public class MecanumTeleOp extends LinearOpMode {
                 wristPos = WRIST_OPEN;
             }
 
+            if (gamepad2.left_bumper) {
+                rotatePos = ROTATION_CLOSE;
+            }
+            if (gamepad2.right_bumper) {
+                rotatePos = ROTATION_OPEN;
+            }
+
             claw.setPosition(clawPos);
             wrist.setPosition(wristPos);
+            rotation.setPosition(rotatePos);
             // leftArm.setTargetPosition((int)armPos);
             rightArm.setTargetPosition((int) armPos);
             // leftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             rightArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            if (Math.abs(gamepad2.right_stick_x) >= rotationBuffer) {
-                rotation.setPower(gamepad2.right_stick_x * rotationSensitivity);
+            rightArm.setPower(armPower);
+/*
+            armManual = gamepad2.right_stick_y * 0.5;
+            if (gamepad2.right_stick_y > 0.05 || gamepad2.right_stick_y < -0.05) {
+                rightArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                rightArm.setPower(armManual);
+                armPos = rightArm.getCurrentPosition();
+            } else {
+                rightArm.setTargetPosition((int)armPos);
+                rightArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                rightArm.setPower(armManual);
             }
+ */
+
+
+            telemetry.addData("rotation: ", rotation.getPosition());
+            telemetry.addData("rightArm: ", rightArm.getCurrentPosition());
+            telemetry.update();
         }
     }
     public void up (int left, int right, double speed) {
@@ -210,6 +242,7 @@ public class MecanumTeleOp extends LinearOpMode {
         // leftLS.setPower(speed);
         rightLS.setPower(speed);
     }
+
     public void down ( int left, int right, double speed){
         // leftPos += left;
         rightPos += right;

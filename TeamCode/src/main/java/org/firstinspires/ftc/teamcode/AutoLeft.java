@@ -13,14 +13,38 @@ public class AutoLeft extends LinearOpMode {
     DcMotor backLeftMotor;
     DcMotor frontRightMotor;
     DcMotor backRightMotor;
-    // DcMotor armMotor;
+    DcMotor rightArm;
 
-    // Servo claw;
+    Servo claw;
+    Servo wrist;
 
     int leftFrontPos = 0;
     int leftBackPos = 0;
     int rightFrontPos = 0;
     int rightBackPos = 0;
+
+    final double ARM_TICKS_PER_DEGREE = 28 // number of encoder ticks per rotation of the bare motor
+            * 13.7 // This is the exact gear ratio of the 13.7:1 Yellow Jacket gearbox
+            * 100.0 / 20.0 // This is the external gear reduction, a 20T pinion gear that drives a 100T hub-mount gear
+            * 1/360.0; // we want ticks per degree, not per rotation
+    double armPos; // Define arm position
+    double armPower = 0.2;
+    final double ARM_REST = 0;
+    final double ARM_FLOOR_PICKUP = 10 * ARM_TICKS_PER_DEGREE;
+    final double ARM_CLEAR_BARRIER = 15 * ARM_TICKS_PER_DEGREE;
+    final double ARM_WALL_PICKUP = 55 * ARM_TICKS_PER_DEGREE;
+    final double ARM_HANG = 75 * ARM_TICKS_PER_DEGREE;
+    final double ARM_HANG_SPECIMEN = 65 * ARM_TICKS_PER_DEGREE;
+    final double ARM_SCORE_LOW_RUNG = 80 * ARM_TICKS_PER_DEGREE;
+    final double ARM_SCORE_HIGH_BASKET = 95 * ARM_TICKS_PER_DEGREE;
+
+    double clawPos; // Define claw position
+    final double CLAW_OPEN = 0.5;
+    final double CLAW_CLOSE = 0;
+
+    double wristPos; // Define wrist position
+    final double WRIST_OPEN = 0.2;
+    final double WRIST_CLOSE = 0;
 
     final int TICKS_PER_INCH = 45; // 11.87 in per rev; 537.7 ticks per rev; 537.7/11.87 ticks per inch
 
@@ -32,43 +56,90 @@ public class AutoLeft extends LinearOpMode {
         backLeftMotor = hardwareMap.dcMotor.get("backLeftMotor");
         frontRightMotor = hardwareMap.dcMotor.get("frontRightMotor");
         backRightMotor = hardwareMap.dcMotor.get("backRightMotor");
-        // armMotor = hardwareMap.dcMotor.get("armMotor");
-        // claw = hardwareMap.servo.get("claw");
+        rightArm = hardwareMap.dcMotor.get("rightArm");
+        claw = hardwareMap.servo.get("claw");
+        wrist = hardwareMap.servo.get("wrist");
 
         frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        // armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        // armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         waitForStart();
 
-        // claw.setPosition(0.4); // ensures claw is tight
-        // STARTING POSITION MOST HAVE LEFT SIDE AGAINST THE WALL
-        drive(25 * TICKS_PER_INCH, 25 * TICKS_PER_INCH, 25 * TICKS_PER_INCH, 25 * TICKS_PER_INCH, 0.5); // Forward
+        // drive to low rung
+        claw.setPosition(CLAW_CLOSE);
+        sleep(500);
+        wrist.setPosition(WRIST_CLOSE);
+        sleep(1000);
+        drive(28 * TICKS_PER_INCH, 28 * TICKS_PER_INCH, 28 * TICKS_PER_INCH, 28 * TICKS_PER_INCH, 0.5); // Forward
+        sleep(1000);
+        armPos = ARM_SCORE_LOW_RUNG;
+        rightArm.setTargetPosition((int)armPos);
+        rightArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightArm.setPower(armPower);
+        while(rightArm.isBusy()) {}
         sleep(2000);
-        drive(10 * TICKS_PER_INCH, -10 * TICKS_PER_INCH, -10 * TICKS_PER_INCH, 10 * TICKS_PER_INCH, 0.5); // Strafe Right
-        sleep(2000);
-        drive(-10 * TICKS_PER_INCH, -10 * TICKS_PER_INCH, -10 * TICKS_PER_INCH, -10 * TICKS_PER_INCH, 0.5); // Reverse
-        sleep(2000);
-        drive(-55 * TICKS_PER_INCH, 55 * TICKS_PER_INCH, 55 * TICKS_PER_INCH, -55 * TICKS_PER_INCH, 0.5); //Strafe Left
-        sleep(2000);
-        drive(10 * TICKS_PER_INCH, 10 * TICKS_PER_INCH, 10 * TICKS_PER_INCH, 10 * TICKS_PER_INCH, 0.5);
+        // hang specimen on low rung
+        drive(5 * TICKS_PER_INCH, 5 * TICKS_PER_INCH, 5 * TICKS_PER_INCH, 5 * TICKS_PER_INCH, 0.5); // Forward
+        sleep(1000);
+        armPos = ARM_HANG_SPECIMEN;
+        rightArm.setTargetPosition((int)armPos);
+        rightArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightArm.setPower(armPower);
+        wrist.setPosition(WRIST_OPEN);
+        while(rightArm.isBusy()) {}
+        sleep(1000);
+        claw.setPosition(CLAW_OPEN);
+        sleep(1000);
+        // robot goes to push samples into net zone
+        wrist.setPosition(WRIST_CLOSE);
+        drive(-12 * TICKS_PER_INCH, -12 * TICKS_PER_INCH, -12 * TICKS_PER_INCH, -12 * TICKS_PER_INCH, 0.5); // Reverse
+        sleep(1000);
+        armPos = ARM_REST;
+        rightArm.setTargetPosition((int)armPos);
+        rightArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightArm.setPower(armPower);
+        drive(-32 * TICKS_PER_INCH, 32 * TICKS_PER_INCH, 32 * TICKS_PER_INCH, -32 * TICKS_PER_INCH, 0.5); // Strafe Left
+        sleep(1000);
+        drive(32 * TICKS_PER_INCH, 32 * TICKS_PER_INCH, 32 * TICKS_PER_INCH, 32 * TICKS_PER_INCH, 0.5); // Forward
+        sleep(1000);
+        drive(-38 * TICKS_PER_INCH, -38 * TICKS_PER_INCH, 38 * TICKS_PER_INCH, 38 * TICKS_PER_INCH, 0.5); // Turn Left
+        sleep(1000);
+        drive(30 * TICKS_PER_INCH, 30 * TICKS_PER_INCH, 30 * TICKS_PER_INCH, 30 * TICKS_PER_INCH, 0.5); // Forward
+        sleep(1000);
+        drive(-30 * TICKS_PER_INCH, -30 * TICKS_PER_INCH, -30 * TICKS_PER_INCH, -30 * TICKS_PER_INCH, 0.5); // Reverse
+        drive(2 * TICKS_PER_INCH, 2 * TICKS_PER_INCH, -2 * TICKS_PER_INCH, -2 * TICKS_PER_INCH, 0.5); // Turn Right
+        drive(10 * TICKS_PER_INCH, -10 * TICKS_PER_INCH, -10 * TICKS_PER_INCH, 10 * TICKS_PER_INCH, 0.6); // Strafe Right
+        sleep(1000);
+        drive(40 * TICKS_PER_INCH, 40 * TICKS_PER_INCH, 40 * TICKS_PER_INCH, 40 * TICKS_PER_INCH, 0.5); // Forward
 
-
-        // sleep(1000);
-        // claw.setPosition(0.6);
-
-        while (!isStopRequested()) {
+        /*
+        // Drive to position
+        drive(20 * TICKS_PER_INCH, 20 * TICKS_PER_INCH, 20 * TICKS_PER_INCH, 20 * TICKS_PER_INCH, 0.6); // Forward
+        drive(30 * TICKS_PER_INCH, -30 * TICKS_PER_INCH, -30 * TICKS_PER_INCH, 30 * TICKS_PER_INCH, 0.6); // Strafe Right
+        drive(35 * TICKS_PER_INCH, 35 * TICKS_PER_INCH, 35 * TICKS_PER_INCH, 35 * TICKS_PER_INCH, 0.6); // Forward
+        drive(40 * TICKS_PER_INCH, 40 * TICKS_PER_INCH, -40 * TICKS_PER_INCH, -40 * TICKS_PER_INCH, 0.6); // Turn Right
+        // first sample
+        drive(-10 * TICKS_PER_INCH, 10 * TICKS_PER_INCH, 10 * TICKS_PER_INCH, -10 * TICKS_PER_INCH, 0.6); // Strafe Left
+        drive(50 * TICKS_PER_INCH, 50 * TICKS_PER_INCH, 50 * TICKS_PER_INCH, 50 * TICKS_PER_INCH, 0.5); // Forward
+        drive(-65 * TICKS_PER_INCH, -65 * TICKS_PER_INCH, -65 * TICKS_PER_INCH, -65 * TICKS_PER_INCH, 0.6); // Reverse
+        // second sample
+        drive(-8 * TICKS_PER_INCH, 8 * TICKS_PER_INCH, 8 * TICKS_PER_INCH, -8 * TICKS_PER_INCH, 0.6); //Strafe Left
+        drive(50 * TICKS_PER_INCH, 50 * TICKS_PER_INCH, 50 * TICKS_PER_INCH, 50 * TICKS_PER_INCH, 0.6); // Forward
+        drive(-65 * TICKS_PER_INCH, -65 * TICKS_PER_INCH, -65 * TICKS_PER_INCH, -65 * TICKS_PER_INCH, 0.6); // Reverse
+         */
+        while(!isStopRequested()){
 
         }
     }
@@ -94,5 +165,13 @@ public class AutoLeft extends LinearOpMode {
         backLeftMotor.setPower(speed);
         frontRightMotor.setPower(speed);
         backRightMotor.setPower(speed);
+
+        waitDrive();
+
+        telemetry.addData("Running", true);
+        telemetry.update();
+    }
+    private void waitDrive() {
+        while (frontLeftMotor.isBusy() && frontRightMotor.isBusy() && backLeftMotor.isBusy() && backRightMotor.isBusy() && this.opModeIsActive()) ;
     }
 }
