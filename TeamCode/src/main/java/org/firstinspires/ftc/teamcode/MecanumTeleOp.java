@@ -39,14 +39,14 @@ public class MecanumTeleOp extends LinearOpMode {
     final double ARM_CLEAR_BARRIER = 15 * ARM_TICKS_PER_DEGREE;
     final double ARM_WALL_PICKUP = 55 * ARM_TICKS_PER_DEGREE;
     final double ARM_HANG = 75 * ARM_TICKS_PER_DEGREE;
-    final double ARM_HANG_SPECIMEN = 80 * ARM_TICKS_PER_DEGREE;
-    final double ARM_SCORE_LOW_RUNG = 85 * ARM_TICKS_PER_DEGREE;
+    final double ARM_HANG_SPECIMEN = 70 * ARM_TICKS_PER_DEGREE;
+    final double ARM_SCORE_HIGH_RUNG = 85 * ARM_TICKS_PER_DEGREE;
     final double ARM_SCORE_HIGH_BASKET = 95 * ARM_TICKS_PER_DEGREE;
     double armManual = 0.0;
 
     double clawPos; // Define claw position
-    final double CLAW_OPEN = 0.5;
-    final double CLAW_CLOSE = 0;
+    final double CLAW_OPEN = 1.0;
+    final double CLAW_CLOSE = 0.2;
 
     double wristPos; // Define wrist position
     final double WRIST_OPEN = 0.2;
@@ -139,10 +139,10 @@ public class MecanumTeleOp extends LinearOpMode {
             }
 
             if (gamepad2.dpad_up) { // linear slide up
-                if (Math.abs(rightPos) >= 10 * LS_TICKS_PER_INCH) {
+                if (Math.abs(rightPos) >= 20 * LS_TICKS_PER_INCH) {
                     // safety
                 } else {
-                    up((int) (0.1 * LS_TICKS_PER_INCH), (int) (0.1 * LS_TICKS_PER_INCH), 0.2);
+                    up((int) (0.1 * LS_TICKS_PER_INCH), (int) (0.1 * LS_TICKS_PER_INCH), 10);
                 }
             }
             if (gamepad2.dpad_down) { // linear slide down
@@ -167,7 +167,7 @@ public class MecanumTeleOp extends LinearOpMode {
                 armPos = ARM_SCORE_HIGH_BASKET;
             }
             if (gamepad1.right_bumper) {
-                armPos = ARM_SCORE_LOW_RUNG;
+                armPos = ARM_SCORE_HIGH_RUNG;
             }
             if (gamepad1.dpad_up) {
                 armPos = ARM_HANG;
@@ -220,10 +220,12 @@ public class MecanumTeleOp extends LinearOpMode {
                 rightArm.setTargetPosition((int)armPos);
                 rightArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 rightArm.setPower(armManual);
+                // sigma balls
             }
  */
 
 
+            telemetry.addData("claw: ", rotation.getPosition());
             telemetry.addData("rotation: ", rotation.getPosition());
             telemetry.addData("rightArm: ", rightArm.getCurrentPosition());
             telemetry.update();
