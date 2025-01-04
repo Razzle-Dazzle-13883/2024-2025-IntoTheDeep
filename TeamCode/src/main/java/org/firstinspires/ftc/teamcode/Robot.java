@@ -10,9 +10,9 @@ public class Robot {
     DcMotor backLeftMotor;
     DcMotor frontRightMotor;
     DcMotor backRightMotor;
-    DcMotor rightArm;
+    // DcMotor rightArm;
     // DcMotor leftArm;
-    DcMotor rightLS;
+    // DcMotor rightLS;
     // DcMotor leftLS;
 
     Servo claw;
@@ -68,39 +68,39 @@ public class Robot {
         backLeftMotor = myOpMode.hardwareMap.dcMotor.get("backLeftMotor");
         frontRightMotor = myOpMode.hardwareMap.dcMotor.get("frontRightMotor");
         backRightMotor = myOpMode.hardwareMap.dcMotor.get("backRightMotor");
-        rightArm = myOpMode.hardwareMap.dcMotor.get("rightArm");
+        // rightArm = myOpMode.hardwareMap.dcMotor.get("rightArm");
         // leftArm = myOpMode.hardwareMap.dcMotor.get("leftArm");
-        rightLS = myOpMode.hardwareMap.dcMotor.get("rightLS");
+        // rightLS = myOpMode.hardwareMap.dcMotor.get("rightLS");
         // leftLS = myOpMode.hardwareMap.dcMotor.get("leftLS");
-        claw = myOpMode.hardwareMap.servo.get("claw");
-        wrist = myOpMode.hardwareMap.servo.get("wrist");
-        rotation = myOpMode.hardwareMap.servo.get("rotation");
+        // claw = myOpMode.hardwareMap.servo.get("claw");
+        // wrist = myOpMode.hardwareMap.servo.get("wrist");
+        // rotation = myOpMode.hardwareMap.servo.get("rotation");
 
         frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        // rightArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         // leftArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightLS.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        // rightLS.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         // leftLS.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        // rightArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         // leftArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightLS.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        // rightLS.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         // leftLS.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        // rightArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         // leftArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightLS.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        // rightLS.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         // leftLS.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Reverse the right side motors. This may be wrong for your setup.
@@ -109,7 +109,7 @@ public class Robot {
         frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         // rightArm.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightLS.setDirection(DcMotorSimple.Direction.REVERSE);
+        // rightLS.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     public void robotMove(double frontLeftPower, double backLeftPower, double frontRightPower, double backRightPower){
@@ -125,6 +125,7 @@ public class Robot {
         frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
+    /*
     public void up (int left, int right, double speed) {
         // leftPos -= left;
         rightPos -= right;
@@ -152,6 +153,7 @@ public class Robot {
         // leftLS.setPower(speed);
         rightLS.setPower(speed);
     }
+     */
     public void drive(int lF, int lB, int rF, int rB, double speed) {
 
         leftFrontPos -= lF;

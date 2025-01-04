@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 public class MecanumTeleOp extends LinearOpMode {
     Robot robot;
 
-    double speedFactor = 0.7;
+    double speedFactor = 1.0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -19,7 +19,7 @@ public class MecanumTeleOp extends LinearOpMode {
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
-            double y = gamepad1.left_stick_y; // Remember, Y stick value is reversed
+            double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
             double x = -gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
             double rx = -gamepad1.right_stick_x;
 
@@ -39,7 +39,7 @@ public class MecanumTeleOp extends LinearOpMode {
             } else if (gamepad1.right_stick_x == 0) {
                 robot.robotBrakeBehavior();
             }
-
+/*
             if (gamepad2.dpad_up) { // linear slide up
                 if (Math.abs(robot.rightPos) >= 20 * robot.LS_TICKS_PER_INCH) {
                     // safety
@@ -51,9 +51,10 @@ public class MecanumTeleOp extends LinearOpMode {
                 robot.down((int)(0.1 * robot.LS_TICKS_PER_INCH),(int)(0.1 * robot.LS_TICKS_PER_INCH), 0.2);
             }
 
-            telemetry.addData("claw: ", robot.rotation.getPosition());
-            telemetry.addData("rotation: ", robot.rotation.getPosition());
-            telemetry.addData("rightArm: ", robot.rightArm.getCurrentPosition());
+ */
+            // telemetry.addData("claw: ", robot.rotation.getPosition());
+            // telemetry.addData("rotation: ", robot.rotation.getPosition());
+            // telemetry.addData("rightArm: ", robot.rightArm.getCurrentPosition());
             telemetry.update();
         }
     }
