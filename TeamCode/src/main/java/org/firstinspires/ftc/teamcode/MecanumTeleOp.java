@@ -39,6 +39,48 @@ public class MecanumTeleOp extends LinearOpMode {
             } else if (gamepad1.right_stick_x == 0) {
                 robot.robotBrakeBehavior();
             }
+            if (gamepad2.x) {
+                robot.inClawPos = robot.INCLAW_OPEN;
+            }
+            if (gamepad2.y) {
+                robot.inClawPos = robot.INCLAW_CLOSE;
+            }
+            if (gamepad2.a) {
+                robot.outClawPos = robot.OUTCLAW_OPEN;
+                robot.inSlidePos = robot.INSLIDE_OUT;
+                robot.inWristPos = robot.INWRIST_PICKUP;
+                robot.inClawPos = robot.INCLAW_OPEN;
+            }
+            if (gamepad2.b) {
+                robot.inWristPos = robot.INWRIST_FEED;
+                robot.inSlidePos = robot.INSLIDE_IN;
+                robot.outClawPos = robot.OUTCLAW_CLOSE;
+                robot.inClawPos = robot.INCLAW_OPEN;
+            }
+            if (gamepad1.dpad_up) {
+                robot.up((int)robot.LS_HIGHBASKET, (int)robot.LS_HIGHBASKET, 0.5);
+                robot.outArmPos = robot.OUTARM_BASKET;
+                robot.outWristPos = robot.OUTWRIST_DROP;
+            }
+            if (gamepad2.dpad_down) {
+                robot.outClawPos = robot.OUTCLAW_CLOSE;
+                robot.outWristPos = robot.OUTWRIST_FEED;
+                robot.outArmPos = robot.OUTARM_RESET;
+                robot.down((int)robot.LS_RESETDOWN, (int)robot.LS_RESETDOWN, 0.25);
+            }
+            if (gamepad2.dpad_left) {
+                robot.outClawPos = robot. OUTCLAW_OPEN;
+            }
+
+            robot.intakeClaw.setPosition(robot.inClawPos);
+            robot.intakeWrist.setPosition(robot.inWristPos);
+            robot.leftIntakeSlide.setPosition(robot.inSlidePos);
+            robot.rightIntakeSlide.setPosition(robot.inSlidePos);
+            robot.outtakeClaw.setPosition(robot.outClawPos);
+            robot.outtakeWrist.setPosition(robot.outWristPos);
+            robot.leftOuttakeArm.setPosition(robot.outArmPos);
+            robot.rightOuttakeArm.setPosition(robot.outArmPos);
+
 /*
             if (gamepad2.dpad_up) { // linear slide up
                 if (Math.abs(robot.rightPos) >= 20 * robot.LS_TICKS_PER_INCH) {
@@ -52,9 +94,13 @@ public class MecanumTeleOp extends LinearOpMode {
             }
 
  */
-            // telemetry.addData("claw: ", robot.rotation.getPosition());
-            // telemetry.addData("rotation: ", robot.rotation.getPosition());
-            // telemetry.addData("rightArm: ", robot.rightArm.getCurrentPosition());
+            telemetry.addData("leftintakeslide: ", robot.leftIntakeSlide.getPosition());
+            telemetry.addData("rightintakeslide: ", robot.rightIntakeSlide.getPosition());
+            telemetry.addData("leftouttakearm: ", robot.leftOuttakeArm.getPosition());
+            telemetry.addData("rightouttakearm: ", robot.rightOuttakeArm.getPosition());
+            telemetry.addData("intakewrist: ", robot.intakeWrist.getPosition());
+            telemetry.addData("leftLS: ", robot.leftLS.getCurrentPosition());
+            telemetry.addData("rightLS: ", robot.rightLS.getCurrentPosition());
             telemetry.update();
         }
     }
