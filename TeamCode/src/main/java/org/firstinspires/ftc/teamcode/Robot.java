@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 
 public class Robot {
     DcMotor frontLeftMotor;
@@ -21,6 +23,8 @@ public class Robot {
     Servo rightOuttakeArm;
     Servo leftIntakeSlide;
     Servo rightIntakeSlide;
+
+    IMU imu;
 
     int leftPos; // Define left LS position
     int rightPos; // Define right LS position
@@ -116,6 +120,8 @@ public class Robot {
         frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         rightLS.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        initIMU();
     }
 
     public void robotMove(double frontLeftPower, double backLeftPower, double frontRightPower, double backRightPower){
@@ -187,5 +193,15 @@ public class Robot {
     }
     private void waitDrive() {
         while (frontLeftMotor.isBusy() && frontRightMotor.isBusy() && backLeftMotor.isBusy() && backRightMotor.isBusy() && myOpMode.opModeIsActive()) ;
+    }
+    private void initIMU() {
+        // Retrieve the IMU from the hardware map
+        imu = myOpMode.hardwareMap.get(IMU.class, "imu");
+        // Adjust the orientation parameters to match your robot
+        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+                RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
+                RevHubOrientationOnRobot.UsbFacingDirection.UP));
+        // Without this, the REV Hub's orientation is assumed to be logo up / USB forward
+        imu.initialize(parameters);
     }
 }
