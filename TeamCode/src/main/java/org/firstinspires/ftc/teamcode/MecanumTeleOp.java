@@ -20,7 +20,7 @@ public class MecanumTeleOp extends LinearOpMode {
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
-            double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
+            double y = gamepad1.left_stick_y; // Remember, Y stick value is reversed
             double x = -gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
             double rx = -gamepad1.right_stick_x;
 
@@ -83,8 +83,8 @@ public class MecanumTeleOp extends LinearOpMode {
                 robot.outClawPos = robot.OUTCLAW_CLOSE;
                 robot.inClawPos = robot.INCLAW_OPEN;
             }
-            if (gamepad1.dpad_up) {
-                robot.up((int)robot.LS_HIGHBASKET, (int)robot.LS_HIGHBASKET, 0.5);
+            if (gamepad2.dpad_up) {
+                // robot.up((int)robot.LS_HIGHBASKET, (int)robot.LS_HIGHBASKET, 0.5);
                 robot.outArmPos = robot.OUTARM_BASKET;
                 robot.outWristPos = robot.OUTWRIST_DROP;
             }
@@ -92,7 +92,7 @@ public class MecanumTeleOp extends LinearOpMode {
                 robot.outClawPos = robot.OUTCLAW_CLOSE;
                 robot.outWristPos = robot.OUTWRIST_FEED;
                 robot.outArmPos = robot.OUTARM_RESET;
-                robot.down((int)robot.LS_RESETDOWN, (int)robot.LS_RESETDOWN, 0.25);
+                // robot.down((int)robot.LS_RESETDOWN, (int)robot.LS_RESETDOWN, 0.25);
             }
             if (gamepad2.dpad_left) {
                 robot.outClawPos = robot. OUTCLAW_OPEN;
@@ -117,16 +117,19 @@ public class MecanumTeleOp extends LinearOpMode {
             }
             if (gamepad2.dpad_down) { // linear slide down
                 robot.down((int)(0.1 * robot.LS_TICKS_PER_INCH),(int)(0.1 * robot.LS_TICKS_PER_INCH), 0.2);
+                // i left my water bottle here
             }
 
  */
+
             telemetry.addData("leftintakeslide: ", robot.leftIntakeSlide.getPosition());
             telemetry.addData("rightintakeslide: ", robot.rightIntakeSlide.getPosition());
             telemetry.addData("leftouttakearm: ", robot.leftOuttakeArm.getPosition());
             telemetry.addData("rightouttakearm: ", robot.rightOuttakeArm.getPosition());
-            telemetry.addData("intakewrist: ", robot.intakeWrist.getPosition());
-            telemetry.addData("leftLS: ", robot.leftLS.getCurrentPosition());
-            telemetry.addData("rightLS: ", robot.rightLS.getCurrentPosition());
+            telemetry.addData("outtakewrist: ", robot.outtakeWrist.getPosition());
+            // telemetry.addData("intakewrist: ", robot.intakeWrist.getPosition());
+            // telemetry.addData("leftLS: ", robot.leftLS.getCurrentPosition());
+            // telemetry.addData("rightLS: ", robot.rightLS.getCurrentPosition());
             telemetry.update();
         }
     }

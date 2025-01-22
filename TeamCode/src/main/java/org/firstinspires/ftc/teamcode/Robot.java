@@ -12,8 +12,9 @@ public class Robot {
     DcMotor backLeftMotor;
     DcMotor frontRightMotor;
     DcMotor backRightMotor;
-    DcMotor rightLS;
-    DcMotor leftLS;
+    // DcMotor rightLS;
+    // DcMotor leftLS;
+
 
     Servo intakeClaw;
     Servo intakeWrist;
@@ -23,6 +24,7 @@ public class Robot {
     Servo rightOuttakeArm;
     Servo leftIntakeSlide;
     Servo rightIntakeSlide;
+
 
     IMU imu;
 
@@ -41,28 +43,37 @@ public class Robot {
     final double LS_RESETDOWN = 1 * LS_TICKS_PER_INCH;
 
     double inClawPos;
-    final double INCLAW_OPEN = 0.5;
-    final double INCLAW_CLOSE = 0;
+    final double INCLAW_OPEN = 1;
+    final double INCLAW_CLOSE = 0.;
 
     double inWristPos;
-    final double INWRIST_PICKUP = 1.0;
-    final double INWRIST_FEED = 0.1;
+    final double INWRIST_PICKUP = 0.9;
+    final double INWRIST_FEED = 0.2;
 
     double outClawPos;
-    final double OUTCLAW_OPEN = 0.6;
-    final double OUTCLAW_CLOSE = 0.1;
+    final double OUTCLAW_OPEN = 1;
+    final double OUTCLAW_CLOSE = 0.5;
 
     double outWristPos;
-    final double OUTWRIST_FEED = 0.2;
-    final double OUTWRIST_DROP = 1;
+    final double OUTWRIST_FEED = 1;
+    final double OUTWRIST_DROP = 0;
+    final double OUTWRIST_WALL = 0.2;
 
     double outArmPos;
-    final double OUTARM_BASKET = 0.8;
+    final double OUTARM_BASKET = 0.7;
     final double OUTARM_RESET = 0.2;
+    final double OUTARM_HANG = 0.8;
+    final double OUTARM_WALL = 0.95;
 
     double inSlidePos;
-    final double INSLIDE_OUT = 0.7;
-    final double INSLIDE_IN = 0.1;
+    final double INSLIDE_OUT = 0;
+    final double INSLIDE_IN = 1;
+
+    /*
+    double rightInSlidePos;
+    final double RIGHTINSLIDE_OUT = 0.65;
+    final double RIGHTINSLIDE_IN = 0.4;
+     */
 
     int leftFrontPos = 0;
     int leftBackPos = 0;
@@ -81,9 +92,10 @@ public class Robot {
         backLeftMotor = myOpMode.hardwareMap.dcMotor.get("backLeftMotor");
         frontRightMotor = myOpMode.hardwareMap.dcMotor.get("frontRightMotor");
         backRightMotor = myOpMode.hardwareMap.dcMotor.get("backRightMotor");
-        rightLS = myOpMode.hardwareMap.dcMotor.get("rightLS");
-        leftLS = myOpMode.hardwareMap.dcMotor.get("leftLS");
+        // rightLS = myOpMode.hardwareMap.dcMotor.get("rightLS");
+        // leftLS = myOpMode.hardwareMap.dcMotor.get("leftLS");
         // Declare our servos
+
         intakeClaw = myOpMode.hardwareMap.servo.get("intakeClaw");
         intakeWrist = myOpMode.hardwareMap.servo.get("intakeWrist");
         outtakeClaw = myOpMode.hardwareMap.servo.get("outtakeClaw");
@@ -92,34 +104,36 @@ public class Robot {
         rightOuttakeArm = myOpMode.hardwareMap.servo.get("rightOuttakeArm");
         leftIntakeSlide = myOpMode.hardwareMap.servo.get("leftIntakeSlide");
         rightIntakeSlide = myOpMode.hardwareMap.servo.get("rightIntakeSlide");
+        rightOuttakeArm.setDirection(Servo.Direction.REVERSE);
+        rightIntakeSlide.setDirection(Servo.Direction.REVERSE);
 
         frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightLS.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftLS.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        // rightLS.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        // leftLS.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightLS.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftLS.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        // rightLS.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        // leftLS.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightLS.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftLS.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        // rightLS.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        // leftLS.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Reverse the right side motors. This may be wrong for your setup.
         // If your robot moves backwards when commanded to go forwards,
         // reverse the left side instead.
         frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightLS.setDirection(DcMotorSimple.Direction.REVERSE);
+        // rightLS.setDirection(DcMotorSimple.Direction.REVERSE);
 
         initIMU();
     }
@@ -138,6 +152,7 @@ public class Robot {
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
+    /*
     public void up (int left, int right, double speed) {
         leftPos -= left;
         rightPos -= right;
@@ -165,6 +180,7 @@ public class Robot {
         leftLS.setPower(speed);
         rightLS.setPower(speed);
     }
+     */
 
     public void drive(int lF, int lB, int rF, int rB, double speed) {
 

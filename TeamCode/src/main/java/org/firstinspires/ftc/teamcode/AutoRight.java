@@ -14,6 +14,38 @@ public class AutoRight extends LinearOpMode {
 
         waitForStart();
 
+        // hang preload specimen
+        robot.outtakeClaw.setPosition(robot.OUTCLAW_CLOSE);
+        robot.outArmPos = robot.OUTARM_HANG;
+        robot.outtakeWrist.setPosition(robot.OUTWRIST_DROP);
+        robot.drive(-20 * robot.TICKS_PER_INCH, -20 * robot.TICKS_PER_INCH, -20 * robot.TICKS_PER_INCH, -20 * robot.TICKS_PER_INCH, 0.8);
+        //robot.up((int) (6 * robot.LS_TICKS_PER_INCH), (int) (6 * robot.LS_TICKS_PER_INCH), 0.4);
+        robot.outArmPos = robot.OUTARM_WALL;
+        sleep(500);
+        robot.outtakeClaw.setPosition(robot.OUTCLAW_OPEN);
+        // robot push samples into observation zone
+        robot.drive(8 * robot.TICKS_PER_INCH, 8 * robot.TICKS_PER_INCH, 8 * robot.TICKS_PER_INCH, 8 * robot.TICKS_PER_INCH, 0.8);
+        robot.outArmPos = robot.OUTARM_RESET;
+        //robot.down((int) (5 * robot.LS_TICKS_PER_INCH), (int) (5 * robot.LS_TICKS_PER_INCH), 0.4);
+        robot.drive(-10 * robot.TICKS_PER_INCH, 10 * robot.TICKS_PER_INCH, 10 * robot.TICKS_PER_INCH, -10 * robot.TICKS_PER_INCH, 0.8);
+        robot.drive(-35 * robot.TICKS_PER_INCH, -35 * robot.TICKS_PER_INCH, -35 * robot.TICKS_PER_INCH, -20 * robot.TICKS_PER_INCH, 0.8);
+        robot.drive(-8 * robot.TICKS_PER_INCH, 8 * robot.TICKS_PER_INCH, 8 * robot.TICKS_PER_INCH, -8 * robot.TICKS_PER_INCH, 0.8);
+        // first sample push
+        robot.drive(45 * robot.TICKS_PER_INCH, 45 * robot.TICKS_PER_INCH, 45 * robot.TICKS_PER_INCH, 45 * robot.TICKS_PER_INCH, 0.8);
+        robot.drive(-45 * robot.TICKS_PER_INCH, -45 * robot.TICKS_PER_INCH, -45 * robot.TICKS_PER_INCH, -45 * robot.TICKS_PER_INCH, 0.8);
+        // second sample push
+        robot.drive(-8 * robot.TICKS_PER_INCH, 8 * robot.TICKS_PER_INCH, 8 * robot.TICKS_PER_INCH, -8 * robot.TICKS_PER_INCH, 0.8);
+        robot.drive(45 * robot.TICKS_PER_INCH, 45 * robot.TICKS_PER_INCH, 45 * robot.TICKS_PER_INCH, 45 * robot.TICKS_PER_INCH, 0.8);
+        // wall pickup first specimen
+        robot.drive(-5 * robot.TICKS_PER_INCH, -5 * robot.TICKS_PER_INCH, -5 * robot.TICKS_PER_INCH, -5 * robot.TICKS_PER_INCH, 0.8);
+        robot.drive(6 * robot.TICKS_PER_INCH, -6 * robot.TICKS_PER_INCH, -6 * robot.TICKS_PER_INCH, 6 * robot.TICKS_PER_INCH, 0.8);
+        robot.drive(40 * robot.TICKS_PER_INCH, 40 * robot.TICKS_PER_INCH, -40 * robot.TICKS_PER_INCH, -40 * robot.TICKS_PER_INCH, 0.8);
+        robot.outArmPos = robot.OUTARM_WALL;
+        robot.outtakeWrist.setPosition(robot.OUTWRIST_WALL);
+        robot.drive(-2 * robot.TICKS_PER_INCH, -2 * robot.TICKS_PER_INCH, -2 * robot.TICKS_PER_INCH, -2 * robot.TICKS_PER_INCH, 0.8);
+        robot.outtakeClaw.setPosition(robot.OUTCLAW_CLOSE);
+
+
         /*
         claw.setPosition(CLAW_CLOSE);
         sleep(500);
