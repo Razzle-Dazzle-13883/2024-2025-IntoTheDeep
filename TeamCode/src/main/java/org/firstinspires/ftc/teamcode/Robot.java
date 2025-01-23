@@ -12,18 +12,18 @@ public class Robot {
     DcMotor backLeftMotor;
     DcMotor frontRightMotor;
     DcMotor backRightMotor;
-    // DcMotor rightLS;
-    // DcMotor leftLS;
+    DcMotor rightLS;
+    DcMotor leftLS;
 
 
     Servo intakeClaw;
     Servo intakeWrist;
     Servo outtakeClaw;
     Servo outtakeWrist;
-    Servo leftOuttakeArm;
+    // Servo leftOuttakeArm;
     Servo rightOuttakeArm;
     Servo leftIntakeSlide;
-    Servo rightIntakeSlide;
+    // Servo rightIntakeSlide;
 
 
     IMU imu;
@@ -38,13 +38,13 @@ public class Robot {
             * 100.0 / 20.0 // This is the external gear reduction, a 20T pinion gear that drives a 100T hub-mount gear
             * 1/360.0; // we want ticks per degree, not per rotation
     double slidePos;
-    final double LS_HIGHBASKET = 10 * LS_TICKS_PER_INCH;
-    final double LS_HIGHCHAMBER = 8 * LS_TICKS_PER_INCH;
-    final double LS_RESETDOWN = 1 * LS_TICKS_PER_INCH;
+    // final double LS_HIGHBASKET = 10 * LS_TICKS_PER_INCH;
+    final double LS_HIGHCHAMBER = 6 * LS_TICKS_PER_INCH;
+    final double LS_RESETDOWN = 5 * LS_TICKS_PER_INCH;
 
     double inClawPos;
     final double INCLAW_OPEN = 1;
-    final double INCLAW_CLOSE = 0.;
+    final double INCLAW_CLOSE = 0;
 
     double inWristPos;
     final double INWRIST_PICKUP = 0.9;
@@ -61,14 +61,20 @@ public class Robot {
 
     double outArmPos;
     final double OUTARM_BASKET = 0.7;
-    final double OUTARM_RESET = 0.2;
-    final double OUTARM_HANG = 0.8;
-    final double OUTARM_WALL = 0.95;
-
+    final double OUTARM_RESET = 0;
+    final double OUTARM_HANG = 1;
     double inSlidePos;
     final double INSLIDE_OUT = 0;
     final double INSLIDE_IN = 1;
 
+    /*
+    double stallCurrent = 9.5;
+
+        if (leftLS.getCurrent(CurrentUnit.AMPS) >= stallCurrent || rightLS.getCurrent(CurrentUnit.AMPS) >= stallCurrent) {
+        leftLS.setTargetPosition(0);
+        rightLS.setTargetPosition(0);
+    }
+     */
     /*
     double rightInSlidePos;
     final double RIGHTINSLIDE_OUT = 0.65;
@@ -92,48 +98,48 @@ public class Robot {
         backLeftMotor = myOpMode.hardwareMap.dcMotor.get("backLeftMotor");
         frontRightMotor = myOpMode.hardwareMap.dcMotor.get("frontRightMotor");
         backRightMotor = myOpMode.hardwareMap.dcMotor.get("backRightMotor");
-        // rightLS = myOpMode.hardwareMap.dcMotor.get("rightLS");
-        // leftLS = myOpMode.hardwareMap.dcMotor.get("leftLS");
+        rightLS = myOpMode.hardwareMap.dcMotor.get("rightLS");
+        leftLS = myOpMode.hardwareMap.dcMotor.get("leftLS");
         // Declare our servos
 
         intakeClaw = myOpMode.hardwareMap.servo.get("intakeClaw");
         intakeWrist = myOpMode.hardwareMap.servo.get("intakeWrist");
         outtakeClaw = myOpMode.hardwareMap.servo.get("outtakeClaw");
         outtakeWrist = myOpMode.hardwareMap.servo.get("outtakeWrist");
-        leftOuttakeArm = myOpMode.hardwareMap.servo.get("leftOuttakeArm");
+        // leftOuttakeArm = myOpMode.hardwareMap.servo.get("leftOuttakeArm");
         rightOuttakeArm = myOpMode.hardwareMap.servo.get("rightOuttakeArm");
         leftIntakeSlide = myOpMode.hardwareMap.servo.get("leftIntakeSlide");
-        rightIntakeSlide = myOpMode.hardwareMap.servo.get("rightIntakeSlide");
+        //rightIntakeSlide = myOpMode.hardwareMap.servo.get("rightIntakeSlide");
         rightOuttakeArm.setDirection(Servo.Direction.REVERSE);
-        rightIntakeSlide.setDirection(Servo.Direction.REVERSE);
+        //rightIntakeSlide.setDirection(Servo.Direction.REVERSE);
 
         frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        // rightLS.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        // leftLS.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightLS.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftLS.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        // rightLS.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        // leftLS.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightLS.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftLS.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        // rightLS.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        // leftLS.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightLS.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftLS.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Reverse the right side motors. This may be wrong for your setup.
         // If your robot moves backwards when commanded to go forwards,
         // reverse the left side instead.
         frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        // rightLS.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightLS.setDirection(DcMotorSimple.Direction.REVERSE);
 
         initIMU();
     }
@@ -152,7 +158,6 @@ public class Robot {
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
-    /*
     public void up (int left, int right, double speed) {
         leftPos -= left;
         rightPos -= right;
@@ -180,7 +185,7 @@ public class Robot {
         leftLS.setPower(speed);
         rightLS.setPower(speed);
     }
-     */
+
 
     public void drive(int lF, int lB, int rF, int rB, double speed) {
 
@@ -206,6 +211,31 @@ public class Robot {
         backRightMotor.setPower(speed);
 
         waitDrive();
+    }
+    public void intakePick() {
+        outtakeClaw.setPosition(OUTCLAW_OPEN);
+        leftIntakeSlide.setPosition(INSLIDE_OUT);
+        intakeWrist.setPosition(INWRIST_FEED);
+        intakeClaw.setPosition(INCLAW_CLOSE);
+        outtakeWrist.setPosition(OUTWRIST_FEED);
+        rightOuttakeArm.setPosition(OUTARM_RESET);
+    }
+    public void intakeFeed() {
+        intakeWrist.setPosition(INWRIST_PICKUP);
+        leftIntakeSlide.setPosition(INSLIDE_IN);
+        outtakeClaw.setPosition(OUTCLAW_CLOSE);
+        intakeClaw.setPosition(INCLAW_OPEN);
+    }
+    public void outtakeUp() {
+        // up((int)LS_HIGHCHAMBER, (int)LS_HIGHCHAMBER, 0.5);
+        rightOuttakeArm.setPosition(OUTARM_HANG);
+        outtakeWrist.setPosition(OUTWRIST_DROP);
+    }
+    public void outtakeDown() {
+        // down((int)LS_RESETDOWN, (int)LS_RESETDOWN, 0.25);
+        outtakeClaw.setPosition(OUTCLAW_OPEN);
+        // outtakeWrist.setPosition(OUTWRIST_FEED);
+        // rightOuttakeArm.setPosition(OUTARM_RESET);
     }
     private void waitDrive() {
         while (frontLeftMotor.isBusy() && frontRightMotor.isBusy() && backLeftMotor.isBusy() && backRightMotor.isBusy() && myOpMode.opModeIsActive()) ;

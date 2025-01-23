@@ -7,7 +7,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 @TeleOp(name="MyTeleOpMode")
 public class MecanumTeleOp extends LinearOpMode {
     Robot robot;
-
     double speedFactor = 1.0;
 
     @Override
@@ -66,70 +65,51 @@ public class MecanumTeleOp extends LinearOpMode {
                 robot.robotBrakeBehavior();
             }
             if (gamepad2.x) {
-                robot.inClawPos = robot.INCLAW_OPEN;
+                robot.intakeClaw.setPosition(robot.INCLAW_OPEN);
             }
             if (gamepad2.y) {
-                robot.inClawPos = robot.INCLAW_CLOSE;
+                robot.intakeClaw.setPosition(robot.INCLAW_CLOSE);
             }
             if (gamepad2.a) {
-                robot.outClawPos = robot.OUTCLAW_OPEN;
-                robot.inSlidePos = robot.INSLIDE_OUT;
-                robot.inWristPos = robot.INWRIST_PICKUP;
-                robot.inClawPos = robot.INCLAW_OPEN;
+                robot.intakePick();
             }
             if (gamepad2.b) {
-                robot.inWristPos = robot.INWRIST_FEED;
-                robot.inSlidePos = robot.INSLIDE_IN;
-                robot.outClawPos = robot.OUTCLAW_CLOSE;
-                robot.inClawPos = robot.INCLAW_OPEN;
+                robot.intakeFeed();
             }
             if (gamepad2.dpad_up) {
-                // robot.up((int)robot.LS_HIGHBASKET, (int)robot.LS_HIGHBASKET, 0.5);
-                robot.outArmPos = robot.OUTARM_BASKET;
-                robot.outWristPos = robot.OUTWRIST_DROP;
+                robot.outtakeUp();
             }
             if (gamepad2.dpad_down) {
-                robot.outClawPos = robot.OUTCLAW_CLOSE;
-                robot.outWristPos = robot.OUTWRIST_FEED;
-                robot.outArmPos = robot.OUTARM_RESET;
-                // robot.down((int)robot.LS_RESETDOWN, (int)robot.LS_RESETDOWN, 0.25);
+                robot.outtakeDown();
             }
             if (gamepad2.dpad_left) {
-                robot.outClawPos = robot. OUTCLAW_OPEN;
+                robot.outtakeClaw.setPosition(robot.OUTCLAW_OPEN);
             }
 
-            robot.intakeClaw.setPosition(robot.inClawPos);
-            robot.intakeWrist.setPosition(robot.inWristPos);
-            robot.leftIntakeSlide.setPosition(robot.inSlidePos);
-            robot.rightIntakeSlide.setPosition(robot.inSlidePos);
-            robot.outtakeClaw.setPosition(robot.outClawPos);
-            robot.outtakeWrist.setPosition(robot.outWristPos);
-            robot.leftOuttakeArm.setPosition(robot.outArmPos);
-            robot.rightOuttakeArm.setPosition(robot.outArmPos);
-
-/*
+            /*
             if (gamepad2.dpad_up) { // linear slide up
                 if (Math.abs(robot.rightPos) >= 20 * robot.LS_TICKS_PER_INCH) {
-                    // safety
+                    // safety up
                 } else {
                     robot.up((int) (0.1 * robot.LS_TICKS_PER_INCH), (int) (0.1 * robot.LS_TICKS_PER_INCH), 10);
                 }
             }
             if (gamepad2.dpad_down) { // linear slide down
-                robot.down((int)(0.1 * robot.LS_TICKS_PER_INCH),(int)(0.1 * robot.LS_TICKS_PER_INCH), 0.2);
+                if (Math.abs(robot.rightPos) <= 2 * robot.LS_TICKS_PER_INCH) {
+                    // safety down
+                } else {
+                    robot.down((int) (0.1 * robot.LS_TICKS_PER_INCH), (int) (0.1 * robot.LS_TICKS_PER_INCH), 0.2);
+                }
                 // i left my water bottle here
             }
-
- */
+             */
 
             telemetry.addData("leftintakeslide: ", robot.leftIntakeSlide.getPosition());
-            telemetry.addData("rightintakeslide: ", robot.rightIntakeSlide.getPosition());
-            telemetry.addData("leftouttakearm: ", robot.leftOuttakeArm.getPosition());
             telemetry.addData("rightouttakearm: ", robot.rightOuttakeArm.getPosition());
             telemetry.addData("outtakewrist: ", robot.outtakeWrist.getPosition());
-            // telemetry.addData("intakewrist: ", robot.intakeWrist.getPosition());
-            // telemetry.addData("leftLS: ", robot.leftLS.getCurrentPosition());
-            // telemetry.addData("rightLS: ", robot.rightLS.getCurrentPosition());
+            telemetry.addData("intakewrist: ", robot.intakeWrist.getPosition());
+            telemetry.addData("leftLS: ", robot.leftLS.getCurrentPosition());
+            telemetry.addData("rightLS: ", robot.rightLS.getCurrentPosition());
             telemetry.update();
         }
     }
