@@ -2,10 +2,13 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 public class Robot {
     DcMotor frontLeftMotor;
@@ -38,9 +41,9 @@ public class Robot {
             * 100.0 / 20.0 // This is the external gear reduction, a 20T pinion gear that drives a 100T hub-mount gear
             * 1/360.0; // we want ticks per degree, not per rotation
     double slidePos;
-    // final double LS_HIGHBASKET = 10 * LS_TICKS_PER_INCH;
-    final double LS_HIGHCHAMBER = 6 * LS_TICKS_PER_INCH;
-    final double LS_RESETDOWN = 5 * LS_TICKS_PER_INCH;
+    final double LS_HIGHBASKET = 4.2 * LS_TICKS_PER_INCH;
+    final double LS_HIGHCHAMBER = 4.2 * LS_TICKS_PER_INCH;
+    final double LS_RESETDOWN = 1 * LS_TICKS_PER_INCH;
 
     double inClawPos;
     final double INCLAW_OPEN = 1;
@@ -55,26 +58,22 @@ public class Robot {
     final double OUTCLAW_CLOSE = 0.5;
 
     double outWristPos;
+
     final double OUTWRIST_FEED = 1;
     final double OUTWRIST_DROP = 0;
     final double OUTWRIST_WALL = 0.2;
 
     double outArmPos;
-    final double OUTARM_BASKET = 0.7;
-    final double OUTARM_RESET = 0;
-    final double OUTARM_HANG = 1;
+    final double OUTARM_INTER = 0.4;
+    final double OUTARM_RESET = 0.65;
+    final double OUTARM_HANG = 0.01;
     double inSlidePos;
     final double INSLIDE_OUT = 0;
-    final double INSLIDE_IN = 1;
+    final double INSLIDE_IN = 0.15;
 
-    /*
-    double stallCurrent = 9.5;
 
-        if (leftLS.getCurrent(CurrentUnit.AMPS) >= stallCurrent || rightLS.getCurrent(CurrentUnit.AMPS) >= stallCurrent) {
-        leftLS.setTargetPosition(0);
-        rightLS.setTargetPosition(0);
-    }
-     */
+    final double STALL_CURRENT = 9.5;
+
     /*
     double rightInSlidePos;
     final double RIGHTINSLIDE_OUT = 0.65;
@@ -170,6 +169,12 @@ public class Robot {
 
         leftLS.setPower(speed);
         rightLS.setPower(speed);
+
+        if (((DcMotorEx)(leftLS)).getCurrent(CurrentUnit.AMPS) >= STALL_CURRENT ||
+                ((DcMotorEx)(rightLS)).getCurrent(CurrentUnit.AMPS) >= STALL_CURRENT) {
+            leftLS.setPower(0);
+            rightLS.setPower(0);
+        }
     }
 
     public void down ( int left, int right, double speed){
@@ -184,6 +189,12 @@ public class Robot {
 
         leftLS.setPower(speed);
         rightLS.setPower(speed);
+
+        if (((DcMotorEx)(leftLS)).getCurrent(CurrentUnit.AMPS) >= STALL_CURRENT ||
+                ((DcMotorEx)(rightLS)).getCurrent(CurrentUnit.AMPS) >= STALL_CURRENT) {
+            leftLS.setPower(0);
+            rightLS.setPower(0);
+        }
     }
 
 
@@ -213,29 +224,27 @@ public class Robot {
         waitDrive();
     }
     public void intakePick() {
-        outtakeClaw.setPosition(OUTCLAW_OPEN);
         leftIntakeSlide.setPosition(INSLIDE_OUT);
         intakeWrist.setPosition(INWRIST_FEED);
         intakeClaw.setPosition(INCLAW_CLOSE);
-        outtakeWrist.setPosition(OUTWRIST_FEED);
-        rightOuttakeArm.setPosition(OUTARM_RESET);
+        //outtakeWrist.setPosition(OUTWRIST_FEED);
+        //rightOuttakeArm.setPosition(OUTARM_RESET);
     }
     public void intakeFeed() {
         intakeWrist.setPosition(INWRIST_PICKUP);
         leftIntakeSlide.setPosition(INSLIDE_IN);
-        outtakeClaw.setPosition(OUTCLAW_CLOSE);
         intakeClaw.setPosition(INCLAW_OPEN);
     }
     public void outtakeUp() {
-        // up((int)LS_HIGHCHAMBER, (int)LS_HIGHCHAMBER, 0.5);
+        // up((int)LS_HIGHBASKET, (int)LS_HIGHBASKET, 0.5);
         rightOuttakeArm.setPosition(OUTARM_HANG);
         outtakeWrist.setPosition(OUTWRIST_DROP);
     }
     public void outtakeDown() {
-        // down((int)LS_RESETDOWN, (int)LS_RESETDOWN, 0.25);
+        // down((int)LS_RESETDOWN, (int)LS_RESETDOWN, 0.5);
         outtakeClaw.setPosition(OUTCLAW_OPEN);
-        // outtakeWrist.setPosition(OUTWRIST_FEED);
-        // rightOuttakeArm.setPosition(OUTARM_RESET);
+        outtakeWrist.setPosition(OUTWRIST_FEED);
+        rightOuttakeArm.setPosition(OUTARM_RESET);
     }
     private void waitDrive() {
         while (frontLeftMotor.isBusy() && frontRightMotor.isBusy() && backLeftMotor.isBusy() && backRightMotor.isBusy() && myOpMode.opModeIsActive()) ;

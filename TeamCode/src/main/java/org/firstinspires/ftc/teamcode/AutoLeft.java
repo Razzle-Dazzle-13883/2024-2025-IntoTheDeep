@@ -14,6 +14,57 @@ public class AutoLeft extends LinearOpMode {
 
         waitForStart();
 
+        // drop preload to high basket
+        robot.drive(-4 * robot.TICKS_PER_INCH, 4 * robot.TICKS_PER_INCH, 4 * robot.TICKS_PER_INCH, -4 * robot.TICKS_PER_INCH, 0.5);
+        robot.drive(-15 * robot.TICKS_PER_INCH, -15 * robot.TICKS_PER_INCH, -15 * robot.TICKS_PER_INCH, -15 * robot.TICKS_PER_INCH, 0.5);
+        robot.intakePick();
+        robot.intakeClaw.setPosition(robot.INCLAW_OPEN);
+        robot.drive(-36 * robot.TICKS_PER_INCH, -36 * robot.TICKS_PER_INCH, 36 * robot.TICKS_PER_INCH, 36 * robot.TICKS_PER_INCH, 0.5);
+        robot.outtakeUp();
+        robot.intakeFeed();
+        robot.drive(-3 * robot.TICKS_PER_INCH, -3 * robot.TICKS_PER_INCH, -3 * robot.TICKS_PER_INCH, -3 * robot.TICKS_PER_INCH, 0.5);
+        sleep(200);
+        robot.outtakeClaw.setPosition(robot.OUTCLAW_OPEN);
+
+        // grab first sample
+        robot.drive(6 * robot.TICKS_PER_INCH, 6 * robot.TICKS_PER_INCH, 6 * robot.TICKS_PER_INCH, 6 * robot.TICKS_PER_INCH, 0.5);
+        robot.outtakeDown();
+        robot.drive(3 * robot.TICKS_PER_INCH, 3 * robot.TICKS_PER_INCH, 3 * robot.TICKS_PER_INCH, 3 * robot.TICKS_PER_INCH, 0.5);
+        robot.intakePick();
+        sleep(200);
+        robot.intakeClaw.setPosition(robot.INCLAW_OPEN);
+        robot.intakeFeed();
+        sleep(200);
+
+        // drop first sample
+        robot.drive(-9 * robot.TICKS_PER_INCH, -9 * robot.TICKS_PER_INCH, -9 * robot.TICKS_PER_INCH, -9 * robot.TICKS_PER_INCH, 0.5);
+        robot.outtakeUp();
+        sleep(200);
+        robot.outtakeClaw.setPosition(robot.OUTCLAW_OPEN);
+
+        // grab second sample
+        robot.drive(6 * robot.TICKS_PER_INCH, 6 * robot.TICKS_PER_INCH, 6 * robot.TICKS_PER_INCH, 6 * robot.TICKS_PER_INCH, 0.5);
+        robot.outtakeDown();
+        robot.drive(4 * robot.TICKS_PER_INCH, 4 * robot.TICKS_PER_INCH, -4 * robot.TICKS_PER_INCH, -4 * robot.TICKS_PER_INCH, 0.5);
+        robot.drive(-8 * robot.TICKS_PER_INCH, 8 * robot.TICKS_PER_INCH, 8 * robot.TICKS_PER_INCH, -8 * robot.TICKS_PER_INCH, 0.5);
+        robot.intakePick();
+        sleep(200);
+        robot.intakeClaw.setPosition(robot.INCLAW_OPEN);
+        robot.intakeFeed();
+        sleep(200);
+
+        // drop second sample
+        robot.drive(8 * robot.TICKS_PER_INCH, -8 * robot.TICKS_PER_INCH, -8 * robot.TICKS_PER_INCH, 8 * robot.TICKS_PER_INCH, 0.5);
+        robot.drive(-36 * robot.TICKS_PER_INCH, -36 * robot.TICKS_PER_INCH, 36 * robot.TICKS_PER_INCH, 36 * robot.TICKS_PER_INCH, 0.5);
+        robot.drive(-9 * robot.TICKS_PER_INCH, -9 * robot.TICKS_PER_INCH, -9 * robot.TICKS_PER_INCH, -9 * robot.TICKS_PER_INCH, 0.5);
+        robot.outtakeUp();
+        sleep(200);
+        robot.outtakeClaw.setPosition(robot.OUTCLAW_OPEN);
+
+        // end auto
+        robot.drive(6 * robot.TICKS_PER_INCH, 6 * robot.TICKS_PER_INCH, 6 * robot.TICKS_PER_INCH, 6 * robot.TICKS_PER_INCH, 0.5);
+        robot.outtakeDown();
+
         /*
         // drive to low rung
         claw.setPosition(CLAW_CLOSE);
