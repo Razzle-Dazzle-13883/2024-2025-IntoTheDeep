@@ -15,33 +15,59 @@ public class AutoLeft extends LinearOpMode {
         waitForStart();
 
         // drop preload to high basket
-        robot.drive(-4 * robot.TICKS_PER_INCH, 4 * robot.TICKS_PER_INCH, 4 * robot.TICKS_PER_INCH, -4 * robot.TICKS_PER_INCH, 0.5);
-        robot.drive(-15 * robot.TICKS_PER_INCH, -15 * robot.TICKS_PER_INCH, -15 * robot.TICKS_PER_INCH, -15 * robot.TICKS_PER_INCH, 0.5);
+        robot.drive(-5 * robot.TICKS_PER_INCH, 5 * robot.TICKS_PER_INCH, 5 * robot.TICKS_PER_INCH, -5 * robot.TICKS_PER_INCH, 0.5);
+        robot.drive(-20 * robot.TICKS_PER_INCH, -20 * robot.TICKS_PER_INCH, -20 * robot.TICKS_PER_INCH, -20 * robot.TICKS_PER_INCH, 0.5);
         robot.intakePick();
-        robot.intakeClaw.setPosition(robot.INCLAW_OPEN);
-        robot.drive(-36 * robot.TICKS_PER_INCH, -36 * robot.TICKS_PER_INCH, 36 * robot.TICKS_PER_INCH, 36 * robot.TICKS_PER_INCH, 0.5);
+        sleep(1000);
+        robot.intakeClaw.setPosition(robot.INCLAW_CLOSE);
+        robot.drive(-7 * robot.TICKS_PER_INCH, -7 * robot.TICKS_PER_INCH, 7 * robot.TICKS_PER_INCH, 7 * robot.TICKS_PER_INCH, 0.5);
         robot.outtakeUp();
-        robot.intakeFeed();
-        robot.drive(-3 * robot.TICKS_PER_INCH, -3 * robot.TICKS_PER_INCH, -3 * robot.TICKS_PER_INCH, -3 * robot.TICKS_PER_INCH, 0.5);
-        sleep(200);
+        sleep(2000);
+        robot.drive(-8 * robot.TICKS_PER_INCH, -8 * robot.TICKS_PER_INCH, -8 * robot.TICKS_PER_INCH, -8 * robot.TICKS_PER_INCH, 0.5);
+        sleep(500);
         robot.outtakeClaw.setPosition(robot.OUTCLAW_OPEN);
-
-        // grab first sample
-        robot.drive(6 * robot.TICKS_PER_INCH, 6 * robot.TICKS_PER_INCH, 6 * robot.TICKS_PER_INCH, 6 * robot.TICKS_PER_INCH, 0.5);
+        sleep(500);
+        robot.rightOuttakeArm.setPosition(robot.OUTARM_INTER);
+        sleep(1000);
+        robot.drive(10 * robot.TICKS_PER_INCH, 10 * robot.TICKS_PER_INCH, 10 * robot.TICKS_PER_INCH, 10 * robot.TICKS_PER_INCH, 0.5);
         robot.outtakeDown();
-        robot.drive(3 * robot.TICKS_PER_INCH, 3 * robot.TICKS_PER_INCH, 3 * robot.TICKS_PER_INCH, 3 * robot.TICKS_PER_INCH, 0.5);
-        robot.intakePick();
+
+        /*
+        // grab first sample
+        robot.rightOuttakeArm.setPosition(robot.OUTARM_INTER);
+        sleep(1000);
+        robot.drive(10 * robot.TICKS_PER_INCH, 10 * robot.TICKS_PER_INCH, 10 * robot.TICKS_PER_INCH, 10 * robot.TICKS_PER_INCH, 0.5);
+        robot.outtakeDown();
+        sleep(2000);
+        robot.intakeClaw.setPosition(robot.INCLAW_CLOSE);
+        robot.drive(-10 * robot.TICKS_PER_INCH, -10 * robot.TICKS_PER_INCH, 10 * robot.TICKS_PER_INCH, 10 * robot.TICKS_PER_INCH, 0.5);
+        robot.drive(5 * robot.TICKS_PER_INCH, -5 * robot.TICKS_PER_INCH, -5 * robot.TICKS_PER_INCH, 5 * robot.TICKS_PER_INCH, 0.5);
+        sleep(1000);
+        robot.drive(12 * robot.TICKS_PER_INCH, 12 * robot.TICKS_PER_INCH, 12 * robot.TICKS_PER_INCH, 12 * robot.TICKS_PER_INCH, 0.5);
+        robot.drive(-5 * robot.TICKS_PER_INCH, 5 * robot.TICKS_PER_INCH, 5 * robot.TICKS_PER_INCH, -5 * robot.TICKS_PER_INCH, 0.2);
         sleep(200);
         robot.intakeClaw.setPosition(robot.INCLAW_OPEN);
+        robot.outtakeClaw.setPosition(robot.OUTCLAW_OPEN);
+        robot.rightOuttakeArm.setPosition(robot.OUTARM_INTER);
+        sleep(2000);
         robot.intakeFeed();
+        sleep(1000);
+        robot.rightOuttakeArm.setPosition(robot.OUTARM_RESET);
+        sleep(500);
+        robot.outtakeClaw.setPosition(robot.OUTCLAW_CLOSE);
         sleep(200);
+        robot.intakeClaw.setPosition(robot.INCLAW_CLOSE);
+        sleep(500);
+        robot.rightOuttakeArm.setPosition(robot.OUTARM_INTER);
 
         // drop first sample
-        robot.drive(-9 * robot.TICKS_PER_INCH, -9 * robot.TICKS_PER_INCH, -9 * robot.TICKS_PER_INCH, -9 * robot.TICKS_PER_INCH, 0.5);
+        robot.drive(7 * robot.TICKS_PER_INCH, 7 * robot.TICKS_PER_INCH, -7 * robot.TICKS_PER_INCH, -7 * robot.TICKS_PER_INCH, 0.5);
+        robot.drive(-20 * robot.TICKS_PER_INCH, -20 * robot.TICKS_PER_INCH, -20 * robot.TICKS_PER_INCH, -20 * robot.TICKS_PER_INCH, 0.5);
         robot.outtakeUp();
-        sleep(200);
+        sleep(2000);
         robot.outtakeClaw.setPosition(robot.OUTCLAW_OPEN);
 
+        /*
         // grab second sample
         robot.drive(6 * robot.TICKS_PER_INCH, 6 * robot.TICKS_PER_INCH, 6 * robot.TICKS_PER_INCH, 6 * robot.TICKS_PER_INCH, 0.5);
         robot.outtakeDown();
@@ -64,6 +90,8 @@ public class AutoLeft extends LinearOpMode {
         // end auto
         robot.drive(6 * robot.TICKS_PER_INCH, 6 * robot.TICKS_PER_INCH, 6 * robot.TICKS_PER_INCH, 6 * robot.TICKS_PER_INCH, 0.5);
         robot.outtakeDown();
+
+         */
 
         /*
         // drive to low rung

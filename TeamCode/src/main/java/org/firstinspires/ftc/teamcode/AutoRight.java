@@ -16,6 +16,10 @@ public class AutoRight extends LinearOpMode {
 
         waitForStart();
 
+        robot.drive(5 * robot.TICKS_PER_INCH, 5 * robot.TICKS_PER_INCH, 5 * robot.TICKS_PER_INCH, 5 * robot.TICKS_PER_INCH, DRIVE_SPEED);
+        robot.drive(40 * robot.TICKS_PER_INCH, -40 * robot.TICKS_PER_INCH, -40 * robot.TICKS_PER_INCH, 40 * robot.TICKS_PER_INCH, 0.6); // Strafe Right
+
+        /*
         // hang preload specimen
         robot.outtakeClaw.setPosition(robot.OUTCLAW_CLOSE);
         robot.outtakeUp();

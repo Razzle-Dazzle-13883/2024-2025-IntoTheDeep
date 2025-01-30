@@ -69,10 +69,10 @@ public class Robot {
     final double OUTARM_HANG = 0.01;
     double inSlidePos;
     final double INSLIDE_OUT = 0;
-    final double INSLIDE_IN = 0.15;
+    final double INSLIDE_IN = 0.14;
 
 
-    final double STALL_CURRENT = 9.5;
+    final double STALL_CURRENT = 7;
 
     /*
     double rightInSlidePos;

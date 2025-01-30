@@ -95,17 +95,21 @@ public class MecanumTeleOp extends LinearOpMode {
             if (gamepad2.right_bumper) {
                 robot.outtakeClaw.setPosition(robot.OUTCLAW_OPEN);
             }
+            if (gamepad1.dpad_up) {
+                robot.up(1 * (int)robot.LS_TICKS_PER_INCH, 1 * (int)robot.LS_TICKS_PER_INCH, 0.5);
+            }
+            if (gamepad1.dpad_down) {
+                robot.down(1 * (int)robot.LS_TICKS_PER_INCH, 1 * (int)robot.LS_TICKS_PER_INCH, 0.5);
+            }
 
-            /*
-            if (gamepad2.dpad_up) { // linear slide up
+            if (gamepad1.dpad_up) { // linear slide up
                 if (Math.abs(robot.rightPos) >= 20 * robot.LS_TICKS_PER_INCH) {
                     // safety up
                 } else {
                     robot.up((int) (0.1 * robot.LS_TICKS_PER_INCH), (int) (0.1 * robot.LS_TICKS_PER_INCH), 10);
                 }
             }
-            /*
-            if (gamepad2.dpad_down) { // linear slide down
+            if (gamepad1.dpad_down) { // linear slide down
                 if (Math.abs(robot.rightPos) <= 1 * robot.LS_TICKS_PER_INCH) {
                     // safety down
                 } else {
@@ -113,7 +117,7 @@ public class MecanumTeleOp extends LinearOpMode {
                 }
                 // i left my water bottle here
             }
-             */
+
             telemetry.addData("LinearSlideLeft Current: ", ((DcMotorEx)(robot.leftLS)).getCurrent(CurrentUnit.AMPS));
             telemetry.addData("LinearSlideRight Current: ", ((DcMotorEx)(robot.rightLS)).getCurrent(CurrentUnit.AMPS));
 
