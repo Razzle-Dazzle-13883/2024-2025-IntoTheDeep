@@ -102,23 +102,26 @@ public class MecanumTeleOp extends LinearOpMode {
             if (gamepad2.right_bumper) {
                 robot.outtakeClaw.setPosition(robot.OUTCLAW_OPEN);
             }
-            if (gamepad1.dpad_up) {
-                robot.up(1 * (int)robot.LS_TICKS_PER_INCH, 1 * (int)robot.LS_TICKS_PER_INCH, 0.5);
-            }
-            if (gamepad1.dpad_down) {
-                robot.down(1 * (int)robot.LS_TICKS_PER_INCH, 1 * (int)robot.LS_TICKS_PER_INCH, 0.3);
-            }
 
-            /*
-            if (gamepad1.dpad_up) { // linear slide up
-                if (Math.abs(robot.rightPos) >= 20 * robot.LS_TICKS_PER_INCH) {
+            if (gamepad1.dpad_up) {
+               if (Math.abs(robot.leftPos) >= 20 * robot.LS_TICKS_PER_INCH) {
                     // safety up
                 } else {
-                    robot.up((int) (0.1 * robot.LS_TICKS_PER_INCH), (int) (0.1 * robot.LS_TICKS_PER_INCH), 10);
+                    robot.up(5 * (int)robot.LS_TICKS_PER_INCH, 5 * (int)robot.LS_TICKS_PER_INCH, 0.5);
                 }
-             */
-           // }
-                // i left my water bottle here
+            }
+
+            if (gamepad1.dpad_down) {
+                if (Math.abs(robot.leftPos) <= 0.2 * robot.LS_TICKS_PER_INCH) {
+                // safety down
+                } else {
+                robot.down(5 * (int) robot.LS_TICKS_PER_INCH, 5 * (int) robot.LS_TICKS_PER_INCH, 0.5);
+                }
+                if (robot.leftLS.getCurrentPosition() <= 100) {
+                    robot.leftLS.setPower(0);
+                    robot.rightLS.setPower(0);
+                }
+            }
 
             telemetry.addData("LinearSlideLeft Current: ", ((DcMotorEx)(robot.leftLS)).getCurrent(CurrentUnit.AMPS));
             telemetry.addData("LinearSlideRight Current: ", ((DcMotorEx)(robot.rightLS)).getCurrent(CurrentUnit.AMPS));

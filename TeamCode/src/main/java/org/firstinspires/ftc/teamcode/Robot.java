@@ -31,8 +31,8 @@ public class Robot {
 
     IMU imu;
 
-    int leftPos; // Define left LS position
-    int rightPos; // Define right LS position
+    int leftPos = 0; // Define left LS position
+    int rightPos = 0; // Define right LS position
 
     final int TICKS_PER_INCH = 45; // 11.87 in per rev; 537.7 ticks per rev; 537.7/11.87 ticks per inch
     final double LS_TICKS_PER_INCH = 77.7179032134; // 435rpm motor encoder/spool circumference 4.94738 in per rev; 384.5/4.94738 ticks per inch
@@ -169,6 +169,8 @@ public class Robot {
 
         leftLS.setPower(speed);
         rightLS.setPower(speed);
+
+        waitSlides();
     }
 
     public void down ( int left, int right, double speed){
@@ -184,13 +186,7 @@ public class Robot {
         leftLS.setPower(speed);
         rightLS.setPower(speed);
 
-        /*
-        if (((DcMotorEx)(leftLS)).getCurrent(CurrentUnit.AMPS) >= STALL_CURRENT ||
-                ((DcMotorEx)(rightLS)).getCurrent(CurrentUnit.AMPS) >= STALL_CURRENT) {
-            leftLS.setPower(0);
-            rightLS.setPower(0);
-        }
-         */
+        waitSlides();
     }
 
 
@@ -242,6 +238,10 @@ public class Robot {
     }
     private void waitDrive() {
         while (frontLeftMotor.isBusy() && frontRightMotor.isBusy() && backLeftMotor.isBusy() && backRightMotor.isBusy() && myOpMode.opModeIsActive()) ;
+    }
+
+    private void waitSlides() {
+        while (leftLS.isBusy() && rightLS.isBusy() && myOpMode.opModeIsActive()) ;
     }
     private void initIMU() {
         // Retrieve the IMU from the hardware map
