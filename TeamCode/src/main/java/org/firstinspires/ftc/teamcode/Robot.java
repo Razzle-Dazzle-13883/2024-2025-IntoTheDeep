@@ -35,7 +35,7 @@ public class Robot {
     int rightPos; // Define right LS position
 
     final int TICKS_PER_INCH = 45; // 11.87 in per rev; 537.7 ticks per rev; 537.7/11.87 ticks per inch
-    final double LS_TICKS_PER_INCH = 87.2079837; // 435rpm motor encoder/spool circumference 4.409 in per rev; 384.5/4.409 ticks per inch
+    final double LS_TICKS_PER_INCH = 77.7179032134; // 435rpm motor encoder/spool circumference 4.94738 in per rev; 384.5/4.94738 ticks per inch
     final double ARM_TICKS_PER_DEGREE = 28 // number of encoder ticks per rotation of the bare motor
             * 13.7 // This is the exact gear ratio of the 13.7:1 Yellow Jacket gearbox
             * 100.0 / 20.0 // This is the external gear reduction, a 20T pinion gear that drives a 100T hub-mount gear
@@ -158,6 +158,20 @@ public class Robot {
     }
 
     public void up (int left, int right, double speed) {
+        leftPos += left;
+        rightPos += right;
+
+        leftLS.setTargetPosition(leftPos);
+        rightLS.setTargetPosition(rightPos);
+
+        leftLS.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightLS.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        leftLS.setPower(speed);
+        rightLS.setPower(speed);
+    }
+
+    public void down ( int left, int right, double speed){
         leftPos -= left;
         rightPos -= right;
 
@@ -170,31 +184,13 @@ public class Robot {
         leftLS.setPower(speed);
         rightLS.setPower(speed);
 
+        /*
         if (((DcMotorEx)(leftLS)).getCurrent(CurrentUnit.AMPS) >= STALL_CURRENT ||
                 ((DcMotorEx)(rightLS)).getCurrent(CurrentUnit.AMPS) >= STALL_CURRENT) {
             leftLS.setPower(0);
             rightLS.setPower(0);
         }
-    }
-
-    public void down ( int left, int right, double speed){
-        leftPos += left;
-        rightPos += right;
-
-        leftLS.setTargetPosition(leftPos);
-        rightLS.setTargetPosition(rightPos);
-
-        leftLS.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightLS.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        leftLS.setPower(speed);
-        rightLS.setPower(speed);
-
-        if (((DcMotorEx)(leftLS)).getCurrent(CurrentUnit.AMPS) >= STALL_CURRENT ||
-                ((DcMotorEx)(rightLS)).getCurrent(CurrentUnit.AMPS) >= STALL_CURRENT) {
-            leftLS.setPower(0);
-            rightLS.setPower(0);
-        }
+         */
     }
 
 
@@ -236,12 +232,10 @@ public class Robot {
         intakeClaw.setPosition(INCLAW_OPEN);
     }
     public void outtakeUp() {
-        // up((int)LS_HIGHBASKET, (int)LS_HIGHBASKET, 0.5);
         rightOuttakeArm.setPosition(OUTARM_HANG);
         outtakeWrist.setPosition(OUTWRIST_DROP);
     }
     public void outtakeDown() {
-        // down((int)LS_RESETDOWN, (int)LS_RESETDOWN, 0.5);
         outtakeClaw.setPosition(OUTCLAW_OPEN);
         outtakeWrist.setPosition(OUTWRIST_FEED);
         rightOuttakeArm.setPosition(OUTARM_RESET);

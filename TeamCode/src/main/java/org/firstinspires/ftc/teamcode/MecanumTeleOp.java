@@ -73,11 +73,18 @@ public class MecanumTeleOp extends LinearOpMode {
             if (gamepad1.y) {
                 robot.intakeClaw.setPosition(robot.INCLAW_OPEN);
             }
-            if (gamepad2.a) {
-                robot.intakePick();
-            }
-            if (gamepad2.b) {
-                robot.intakeFeed();
+            if (gamepad1.a) {
+                robot.leftIntakeSlide.setPosition(robot.INSLIDE_OUT);
+                sleep(250);
+                robot.intakeWrist.setPosition(robot.INWRIST_FEED);
+                sleep(100);
+                robot.intakeClaw.setPosition(robot.INCLAW_CLOSE);            }
+            if (gamepad1.b) {
+                robot.intakeClaw.setPosition(robot.INCLAW_OPEN);
+                sleep(250);
+                robot.intakeWrist.setPosition(robot.INWRIST_PICKUP);
+                sleep(100);
+                robot.leftIntakeSlide.setPosition(robot.INSLIDE_IN);
             }
             if (gamepad2.dpad_up) {
                 robot.outtakeUp();
@@ -99,24 +106,19 @@ public class MecanumTeleOp extends LinearOpMode {
                 robot.up(1 * (int)robot.LS_TICKS_PER_INCH, 1 * (int)robot.LS_TICKS_PER_INCH, 0.5);
             }
             if (gamepad1.dpad_down) {
-                robot.down(1 * (int)robot.LS_TICKS_PER_INCH, 1 * (int)robot.LS_TICKS_PER_INCH, 0.5);
+                robot.down(1 * (int)robot.LS_TICKS_PER_INCH, 1 * (int)robot.LS_TICKS_PER_INCH, 0.3);
             }
 
+            /*
             if (gamepad1.dpad_up) { // linear slide up
                 if (Math.abs(robot.rightPos) >= 20 * robot.LS_TICKS_PER_INCH) {
                     // safety up
                 } else {
                     robot.up((int) (0.1 * robot.LS_TICKS_PER_INCH), (int) (0.1 * robot.LS_TICKS_PER_INCH), 10);
                 }
-            }
-            if (gamepad1.dpad_down) { // linear slide down
-                if (Math.abs(robot.rightPos) <= 1 * robot.LS_TICKS_PER_INCH) {
-                    // safety down
-                } else {
-                    robot.down((int) (0.1 * robot.LS_TICKS_PER_INCH), (int) (0.1 * robot.LS_TICKS_PER_INCH), 0.2);
-                }
+             */
+           // }
                 // i left my water bottle here
-            }
 
             telemetry.addData("LinearSlideLeft Current: ", ((DcMotorEx)(robot.leftLS)).getCurrent(CurrentUnit.AMPS));
             telemetry.addData("LinearSlideRight Current: ", ((DcMotorEx)(robot.rightLS)).getCurrent(CurrentUnit.AMPS));
