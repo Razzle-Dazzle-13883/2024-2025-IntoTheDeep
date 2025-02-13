@@ -107,7 +107,7 @@ public class MecanumTeleOp extends LinearOpMode {
                if (Math.abs(robot.leftPos) >= 20 * robot.LS_TICKS_PER_INCH) {
                     // safety up
                 } else {
-                    robot.up(5 * (int)robot.LS_TICKS_PER_INCH, 5 * (int)robot.LS_TICKS_PER_INCH, 0.5);
+                    robot.up(20 * (int)robot.LS_TICKS_PER_INCH, 20 * (int)robot.LS_TICKS_PER_INCH, 1.0);
                 }
             }
 
@@ -115,7 +115,7 @@ public class MecanumTeleOp extends LinearOpMode {
                 if (Math.abs(robot.leftPos) <= 0.2 * robot.LS_TICKS_PER_INCH) {
                 // safety down
                 } else {
-                robot.down(5 * (int) robot.LS_TICKS_PER_INCH, 5 * (int) robot.LS_TICKS_PER_INCH, 0.5);
+                robot.down(20 * (int) robot.LS_TICKS_PER_INCH, 20 * (int) robot.LS_TICKS_PER_INCH, 1.0);
                 }
                 if (robot.leftLS.getCurrentPosition() <= 100) {
                     robot.leftLS.setPower(0);

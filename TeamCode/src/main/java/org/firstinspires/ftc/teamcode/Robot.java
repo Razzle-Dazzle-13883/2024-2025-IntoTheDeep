@@ -55,7 +55,7 @@ public class Robot {
 
     double outClawPos;
     final double OUTCLAW_OPEN = 1;
-    final double OUTCLAW_CLOSE = 0.5;
+    final double OUTCLAW_CLOSE = 0.1;
 
     double outWristPos;
 
@@ -65,11 +65,11 @@ public class Robot {
 
     double outArmPos;
     final double OUTARM_INTER = 0.4;
-    final double OUTARM_RESET = 0.65;
+    final double OUTARM_RESET = 0.52;
     final double OUTARM_HANG = 0.01;
     double inSlidePos;
     final double INSLIDE_OUT = 0;
-    final double INSLIDE_IN = 0.14;
+    final double INSLIDE_IN = 0.12;
 
 
     final double STALL_CURRENT = 7;
